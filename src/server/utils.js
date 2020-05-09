@@ -4,8 +4,13 @@ const hpdHousingViolationsAPI = 'https://data.cityofnewyork.us/resource/wvxf-dwi
 const hpdHousingComplaintsAPI = 'https://data.cityofnewyork.us/resource/uwyv-629c.json';
 const hpdComplaintsAPI = 'https://data.cityofnewyork.us/resource/a2nx-4u46.json';
 
+const violationsFields = 'violationid,buildingid,boro,housenumber,lowhousenumber,highhousenumber,streetname,streetcode,zip,apartment,story,block,lot,class,inspectiondate,approveddate,originalcertifybydate,originalcorrectbydate,newcertifybydate,newcorrectbydate,certifieddate,novdescription,novissueddate,currentstatus,currentstatusdate,novtype,violationstatus,latitude,longitude,nta';
 
-const apiRequest = async (url) => {
+const housingComplaintsFields = 'complaintid,buildingid,borough,housenumber,streetname,zip,block,lot,apartment,receiveddate,status,statusdate';
+
+const complaintsFields = 'problemid,complaintid,unittype,spacetype,type,majorcategory,minorcategory,code,status,statusdate,statusdescription';
+
+const nycApiRequest = async (url) => {
   const request = bent('GET', 'json');
 
   try {
@@ -20,24 +25,25 @@ const apiRequest = async (url) => {
 const fetchAddressData = async(address) => {
 
   const [ houseNumber, ...streetName ] = address.split(' ');
+  const validStreetName = streetName.join(' ').toUpperCase();
 
-  const apiViolationsUrl = `${hpdHousingViolationsAPI}?$where=streetname%20like%20%27%25${streetName.join(' ').toUpperCase()}%25%27%20AND%20housenumber%20=%20%27${houseNumber}%27&$order=inspectiondate%20DESC`;
+  const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' &$order=inspectiondate DESC`);
 
-  const apiHousingComplaintsUrl = `${hpdHousingComplaintsAPI}?$where=streetname%20like%20%27%25${streetName.join(' ').toUpperCase()}%25%27%20AND%20housenumber%20=%20%27${houseNumber}%27&$order=statusdate%20DESC`;
+  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}'&$order=statusdate DESC`);
 
   const housingData = {};
 
-  const housingViolationsData = await apiRequest(apiViolationsUrl);
-  const housingComplaintsData = await apiRequest(apiHousingComplaintsUrl);
+  const housingViolationsData = await nycApiRequest(apiViolationsUrl);
+  const housingComplaintsData = await nycApiRequest(apiHousingComplaintsUrl);
 
   housingData.violations = housingViolationsData.length ? housingViolationsData : [];
 
   if(housingComplaintsData.length) {
     const complaintIds = housingComplaintsData.map(complaint => complaint.complaintid);
 
-    const apiComplaintsUrl = `${hpdComplaintsAPI}?$where=complaintid%20in(${complaintIds.join(',')})`;
+    const apiComplaintsUrl = `${hpdComplaintsAPI}?$select=${complaintsFields}&$where=complaintid%20in(${complaintIds.join(',')})`;
 
-    const complaintsData = await apiRequest(apiComplaintsUrl);
+    const complaintsData = await nycApiRequest(apiComplaintsUrl);
 
     housingData.complaints = complaintsData ? mergeHousingComplaintsData(housingComplaintsData, complaintsData) : [];
   }
