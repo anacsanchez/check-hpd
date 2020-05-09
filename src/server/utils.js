@@ -4,12 +4,6 @@ const hpdHousingViolationsAPI = 'https://data.cityofnewyork.us/resource/wvxf-dwi
 const hpdHousingComplaintsAPI = 'https://data.cityofnewyork.us/resource/uwyv-629c.json';
 const hpdComplaintsAPI = 'https://data.cityofnewyork.us/resource/a2nx-4u46.json';
 
-const violationsFields = 'violationid,buildingid,boro,housenumber,lowhousenumber,highhousenumber,streetname,streetcode,zip,apartment,story,block,lot,class,inspectiondate,approveddate,originalcertifybydate,originalcorrectbydate,newcertifybydate,newcorrectbydate,certifieddate,novdescription,novissueddate,currentstatus,currentstatusdate,novtype,violationstatus,latitude,longitude,nta';
-
-const housingComplaintsFields = 'complaintid,buildingid,borough,housenumber,streetname,zip,block,lot,apartment,receiveddate,status,statusdate';
-
-const complaintsFields = 'problemid,complaintid,unittype,spacetype,type,majorcategory,minorcategory,code,status,statusdate,statusdescription';
-
 const nycApiRequest = async (url) => {
   const request = bent('GET', 'json');
 
@@ -27,9 +21,9 @@ const fetchAddressData = async(address) => {
   const [ houseNumber, ...streetName ] = address.split(' ');
   const validStreetName = streetName.join(' ').toUpperCase();
 
-  const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' &$order=inspectiondate DESC`);
+  const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields.join(',')} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' &$order=inspectiondate DESC`);
 
-  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}'&$order=statusdate DESC`);
+  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}'&$order=statusdate DESC`);
 
   const housingData = {};
 
@@ -41,7 +35,7 @@ const fetchAddressData = async(address) => {
   if(housingComplaintsData.length) {
     const complaintIds = housingComplaintsData.map(complaint => complaint.complaintid);
 
-    const apiComplaintsUrl = `${hpdComplaintsAPI}?$select=${complaintsFields}&$where=complaintid%20in(${complaintIds.join(',')})`;
+    const apiComplaintsUrl = `${hpdComplaintsAPI}?$select=${complaintsFields.join(',')}&$where=complaintid%20in(${complaintIds.join(',')})`;
 
     const complaintsData = await nycApiRequest(apiComplaintsUrl);
 
@@ -55,7 +49,8 @@ const fetchAddressData = async(address) => {
 };
 
 const mergeHousingComplaintsData = (houseComplaints,complaints) => {
-  const housingComplaintsObj = houseComplaints.reduce((obj, curr) => ({ [curr.complaintid]: curr, ...obj }));
+  const housingComplaintsObj = houseComplaints.reduce((obj, curr) => ({ [curr.complaintid]: curr, ...obj }),{});
+
   const mergedComplaintsData = complaints.map((complaint) => ({ ...housingComplaintsObj[complaint.complaintid], ...complaint}));
 
   return mergedComplaintsData;
@@ -65,5 +60,64 @@ module.exports = {
   fetchAddressData
 };
 
+const violationsFields = [
+  'violationid',
+  'buildingid',
+  'boro',
+  'housenumber',
+  // 'lowhousenumber',
+  // 'highhousenumber',
+  'streetname',
+  // 'streetcode',
+  'zip',
+  'apartment',
+  'story',
+  // 'block',
+  // 'lot',
+  'class',
+  'inspectiondate',
+  'approveddate',
+  'originalcertifybydate',
+  'originalcorrectbydate',
+  'newcertifybydate',
+  'newcorrectbydate',
+  'certifieddate',
+  'novdescription',
+  'novissueddate',
+  'currentstatus',
+  'currentstatusdate',
+  'novtype',
+  'violationstatus',
+  // 'latitude',
+  // 'longitude',
+  'nta'
+];
 
+const housingComplaintsFields = [
+  'complaintid',
+  'buildingid',
+  'borough',
+  'housenumber',
+  'streetname',
+  'zip',
+  // 'block',
+  // 'lot',
+  'apartment',
+  'receiveddate',
+  'status',
+  'statusdate'
+]
 
+const complaintsFields = [
+  'problemid',
+  'complaintid',
+  'unittype',
+  'spacetype',
+  'type',
+  'majorcategory',
+  'minorcategory',
+  'code',
+  'status',
+  'statusdate',
+  'statusdescription'
+];
