@@ -10,8 +10,6 @@ const { fetchAddressData } = require('./utils');
 app.use(morgan('dev'));
 
 app.get('/api/hpd', async (req,res,next) => {
-  console.log(req.query);
-
   try {
     const addressData = await fetchAddressData(req.query.address);
     return res.status(200).send(addressData);
