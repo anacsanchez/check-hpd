@@ -15,17 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api',apiRouter);
 
-// app.get('/api/hpd', async (req,res,next) => {
-//   try {
-//     const address = decodeURI(req.query.address);
-//     console.log(address)
-//     const addressData = await fetchAddressData(address);
-//     return res.status(200).send(addressData);
-//   } catch(err) {
-//     next({...err, message: err.headers['x-error-message'] });
-//   }
-// });
-
 app.use(express.static(path.join(__dirname, '..','..','public')));
 
 app.use('*', (req, res) => {

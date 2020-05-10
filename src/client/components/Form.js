@@ -26,25 +26,25 @@ const formStyles = css({
   flexDirection: 'column',
   alignItems: 'center',
   margin: '8px'
-})
+});
 
 const inputAreaStyles = css({
   margin: '8px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center'
-})
+});
 
 const labelStyles = css({
   fontSize: '16px',
   margin: '8px'
-})
+});
 
 const textInputStyles = css({
   fontSize: '14px',
   padding: '4px',
   minWidth: '200px'
-})
+});
 
 const submitBtnStyles = css({
   border: '1px solid green',
@@ -53,6 +53,6 @@ const submitBtnStyles = css({
   borderRadius: '4px',
   color: 'white',
   margin: '8px'
-})
+});
 
 export default Form;

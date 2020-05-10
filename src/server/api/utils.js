@@ -25,35 +25,34 @@ const fetchAddressData = async(address) => {
   const [ houseNumber, ...streetName ] = address.split(' ');
   const validStreetName = streetName.join(' ').toUpperCase();
 
-  const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields.join(',')} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' &$order=inspectiondate DESC`);
+  const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields.join(',')} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' AND inspectiondate > '2015-01-01T00:00:00' &$order=inspectiondate DESC`);
 
-  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}'&$order=receiveddate DESC`);
+  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}' AND receiveddate > '2015-01-01T00:00:00' &$order=receiveddate DESC`);
 
   const housingData = {};
 
   const housingViolationsData = await nycApiRequest(apiViolationsUrl);
   const housingComplaintsData = await nycApiRequest(apiHousingComplaintsUrl);
 
-  const housingViolations = housingViolationsData.length ? housingViolationsData.map((violation) => violationReducer(violation)) : [];
-
-  housingData.violations = housingViolations;
+  housingData.violations = housingViolationsData.length ? housingViolationsData : [];
 
   if(housingComplaintsData.length) {
     const complaintIds = housingComplaintsData.map(complaint => complaint.complaintid);
 
-    const apiComplaintsUrl = `${hpdComplaintsAPI}?$select=${complaintsFields.join(',')}&$where=complaintid%20in(${complaintIds.join(',')})&$order=statusdate DESC`;
+    const apiComplaintsUrl = `${hpdComplaintsAPI}?$select=${complaintsFields.join(',')} &$where=complaintid in(${complaintIds.join(',')}) &$order=statusdate DESC`;
 
     const complaintsData = await nycApiRequest(apiComplaintsUrl);
 
     const completeComplaintsData = mergeHousingComplaintsData(housingComplaintsData, complaintsData);
 
-    housingData.complaints = completeComplaintsData.map(complaint => complaintReducer(complaint));
+    housingData.complaints = completeComplaintsData;
   }
   else {
     housingData.complaints = [];
   }
 
-  return housingData;
+  return groupByAddress(housingData);
+
 };
 
 const mergeHousingComplaintsData = (houseComplaints,complaints) => {
@@ -64,8 +63,41 @@ const mergeHousingComplaintsData = (houseComplaints,complaints) => {
   return mergedComplaintsData;
 };
 
+const groupByAddress = ({ violations, complaints }) => {
+
+  const issuesByAddress = new Map();
+
+  for(let violation of violations) {
+    const formattedIssue = violationReducer(violation);
+
+    if(issuesByAddress.has(formattedIssue.address)) {
+      const currentAddressObj = issuesByAddress.get(formattedIssue.address);
+      issuesByAddress.set(formattedIssue.address, { violations: [ ...currentAddressObj.violations, formattedIssue ] });
+    }
+    else {
+      issuesByAddress.set(formattedIssue.address, { violations: [ formattedIssue ]})
+    }
+  }
+
+  for(let complaint of complaints) {
+    const formattedIssue = complaintReducer(complaint);
+
+    if(!issuesByAddress.has(formattedIssue.address)) {
+      issuesByAddress.set(formattedIssue.address, { complaints: [ formattedIssue ]})
+    }
+    else if(issuesByAddress.has(formattedIssue.address) && !issuesByAddress.get(formattedIssue.address).complaints) {
+      const currentAddressObj = issuesByAddress.get(formattedIssue.address);
+      issuesByAddress.set(formattedIssue.address, { ...currentAddressObj, complaints: [ formattedIssue ] } )
+    }
+    else {
+      const currentAddressObj = issuesByAddress.get(formattedIssue.address);
+      issuesByAddress.set(formattedIssue.address, { ...currentAddressObj, complaints: [ ...currentAddressObj.complaints, formattedIssue ] } )
+    }
+  }
+
+  return [ ...issuesByAddress ]
+}
+
 module.exports = {
   fetchAddressData
 };
-
-
