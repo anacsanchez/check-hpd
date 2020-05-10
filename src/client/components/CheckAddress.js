@@ -1,11 +1,10 @@
-import React, { useState, Fragment } from 'react';
-import { Form, Table } from './index';
+import React, { useState } from 'react';
+import { Form, AddressData } from './index';
 import { css } from '@emotion/core';
-import { complaintsTableColsMap, violationsTableColsMap, testData } from '../constants';
 
 const CheckAddress = () => {
 
-  const [ addressData, setAddressData ] = useState(JSON.parse(testData));
+  const [ addressData, setAddressData ] = useState([]);
   const [ isLoading, setIsLoading ] = useState(false);
 
   const fetchAddressData = (address) => {
@@ -32,14 +31,7 @@ const CheckAddress = () => {
       </header>
       <Form handleSubmit={fetchAddressData}/>
       { isLoading ? <div css={loadingStyles}>Loading...</div> : '' }
-      {
-        Object.keys(addressData).length ? (
-          <Fragment>
-            <Table title="Violations" data={addressData.violations} dataId='id' tableColsMap={violationsTableColsMap} />
-            <Table title="Complaints" data={addressData.complaints} dataId='problemId' tableColsMap={complaintsTableColsMap}/>
-          </Fragment>
-        ) : ''
-      }
+      { addressData.length ? <AddressData data={addressData} /> : '' }
     </div>
   );
 };

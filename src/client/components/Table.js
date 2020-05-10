@@ -1,39 +1,45 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { css } from '@emotion/core';
 
 const Table = ({ title, data, dataId, tableColsMap }) => {
+
   return (
-    <Fragment>
-      <div css={titleStyles}>{title}</div>
-      { data.length ?
-      <table css={tableStyles}>
-        <thead>
-          <tr>
-            { [...tableColsMap].map((col) => <th css={tableHeaderStyles} key={`${col[0]}-col`}>{col[1]}</th>)}
+    <table css={tableStyles}>
+      <thead>
+        <th colSpan="100" css={titleStyles}>
+          {title}
+        </th>
+      </thead>
+      <tr>
+      { [...tableColsMap].map(col => {
+          const [ colDataField, colName ] = col;
+          return (
+            <th css={tableHeaderStyles} key={`${colDataField}-col`}>
+              {colName}
+            </th>
+          );
+        })
+      }
+      </tr>
+      {
+        data.map(curr =>
+          <tr key={curr[dataId]}>
+          {
+            [...tableColsMap].map(col => {
+              const field = col[0];
+              return (
+                <td css={tableCellStyles} key={`${curr[dataId]}-${field}`}>
+                  <div css={tableInnerCellStyles}>
+                    {curr[field] ? curr[field] : ''}
+                  </div>
+                </td>
+              );
+            })
+          }
           </tr>
-        </thead>
-        <tbody>
-        {
-          data.map(curr => {
-            return (
-              <tr key={curr[dataId]}>
-              {
-                [...tableColsMap].map(col => {
-                  const field = col[0];
-                  return (
-                    <td css={tableCellStyles} key={`${curr[dataId]}-${field}`}><div css={tableInnerCellStyles}>{curr[field] ? curr[field] : ''}</div></td>
-                  );
-                  }
-                )
-              }
-              </tr>
-            );
-          })
-        }
-        </tbody>
-      </table>
-    : `No ${title} found.`}
-    </Fragment>
+        )
+      }
+    </table>
   );
 };
 
@@ -41,7 +47,9 @@ const Table = ({ title, data, dataId, tableColsMap }) => {
 const tableHeaderStyles = css({
   fontSize: '14px',
   border: '1px solid gray',
-  backgroundColor: '#3f003f'
+  backgroundColor: '#3f003f',
+  whiteSpace: 'nowrap',
+  padding: '10px'
 });
 
 const tableStyles = css({
@@ -49,20 +57,23 @@ const tableStyles = css({
   borderCollapse: 'collapse',
   margin: '12px'
 });
+
 const tableCellStyles = css({
   fontSize: '14px',
   border: '1px solid gray',
   padding: '6px'
-})
+});
 
 const tableInnerCellStyles = css({
   overflow: 'auto',
   height: '62px',
-})
+});
 
 const titleStyles = css({
   fontSize: '16px',
-  margin: '12px'
-})
+  margin: '12px',
+  textTransform:'capitalize',
+  backgroundColor: 'gray'
+});
 
 export default Table;
