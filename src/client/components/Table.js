@@ -39,7 +39,9 @@ const Table = ({ title, data, dataId, tableColsMap }) => {
 
 
 const tableHeaderStyles = css({
-  fontSize: '14px'
+  fontSize: '14px',
+  border: '1px solid gray',
+  backgroundColor: '#3f003f'
 });
 
 const tableStyles = css({
