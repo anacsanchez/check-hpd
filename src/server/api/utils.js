@@ -1,8 +1,13 @@
 const bent = require('bent');
-
-const hpdHousingViolationsAPI = 'https://data.cityofnewyork.us/resource/wvxf-dwi5.json';
-const hpdHousingComplaintsAPI = 'https://data.cityofnewyork.us/resource/uwyv-629c.json';
-const hpdComplaintsAPI = 'https://data.cityofnewyork.us/resource/a2nx-4u46.json';
+const {
+  hpdHousingViolationsAPI,
+  hpdHousingComplaintsAPI,
+  hpdComplaintsAPI,
+  violationsFields,
+  housingComplaintsFields,
+  complaintsFields
+} = require('./constants');
+const { violationReducer, complaintReducer } = require('./reducers');
 
 const nycApiRequest = async (url) => {
   const request = bent('GET', 'json');
@@ -13,7 +18,6 @@ const nycApiRequest = async (url) => {
   } catch(err) {
     throw err;
   }
-
 };
 
 const fetchAddressData = async(address) => {
@@ -30,7 +34,9 @@ const fetchAddressData = async(address) => {
   const housingViolationsData = await nycApiRequest(apiViolationsUrl);
   const housingComplaintsData = await nycApiRequest(apiHousingComplaintsUrl);
 
-  housingData.violations = housingViolationsData.length ? housingViolationsData : [];
+  const housingViolations = housingViolationsData.length ? housingViolationsData.map((violation) => violationReducer(violation)) : [];
+
+  housingData.violations = housingViolations;
 
   if(housingComplaintsData.length) {
     const complaintIds = housingComplaintsData.map(complaint => complaint.complaintid);
@@ -39,7 +45,9 @@ const fetchAddressData = async(address) => {
 
     const complaintsData = await nycApiRequest(apiComplaintsUrl);
 
-    housingData.complaints = complaintsData ? mergeHousingComplaintsData(housingComplaintsData, complaintsData) : [];
+    const completeComplaintsData = mergeHousingComplaintsData(housingComplaintsData, complaintsData);
+
+    housingData.complaints = completeComplaintsData.map(complaint => complaintReducer(complaint));
   }
   else {
     housingData.complaints = [];
@@ -60,64 +68,4 @@ module.exports = {
   fetchAddressData
 };
 
-const violationsFields = [
-  'violationid',
-  'buildingid',
-  'boro',
-  'housenumber',
-  // 'lowhousenumber',
-  // 'highhousenumber',
-  'streetname',
-  // 'streetcode',
-  'zip',
-  'apartment',
-  'story',
-  // 'block',
-  // 'lot',
-  'class',
-  'inspectiondate',
-  'approveddate',
-  'originalcertifybydate',
-  'originalcorrectbydate',
-  'newcertifybydate',
-  'newcorrectbydate',
-  'certifieddate',
-  'novdescription',
-  'novissueddate',
-  'currentstatus',
-  'currentstatusdate',
-  'novtype',
-  'violationstatus',
-  // 'latitude',
-  // 'longitude',
-  'nta'
-];
 
-const housingComplaintsFields = [
-  'complaintid',
-  'buildingid',
-  'borough',
-  'housenumber',
-  'streetname',
-  'zip',
-  // 'block',
-  // 'lot',
-  'apartment',
-  'receiveddate',
-  'status',
-  'statusdate'
-]
-
-const complaintsFields = [
-  'problemid',
-  'complaintid',
-  'unittype',
-  'spacetype',
-  'type',
-  'majorcategory',
-  'minorcategory',
-  'code',
-  'status',
-  'statusdate',
-  'statusdescription'
-];

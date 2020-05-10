@@ -6,23 +6,25 @@ const PORT = process.env.PORT || 3050;
 const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const { fetchAddressData } = require('./utils');
+const apiRouter = require('./api');
 
 app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/hpd', async (req,res,next) => {
-  try {
-    const address = decodeURI(req.query.address);
-    console.log(address)
-    const addressData = await fetchAddressData(address);
-    return res.status(200).send(addressData);
-  } catch(err) {
-    next({...err, message: err.headers['x-error-message'] });
-  }
-});
+app.use('/api',apiRouter);
+
+// app.get('/api/hpd', async (req,res,next) => {
+//   try {
+//     const address = decodeURI(req.query.address);
+//     console.log(address)
+//     const addressData = await fetchAddressData(address);
+//     return res.status(200).send(addressData);
+//   } catch(err) {
+//     next({...err, message: err.headers['x-error-message'] });
+//   }
+// });
 
 app.use(express.static(path.join(__dirname, '..','..','public')));
 
