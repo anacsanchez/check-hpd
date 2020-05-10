@@ -10,12 +10,15 @@
     "start": "node src/server/index.js",
     "start:dev-server": "nodemon src/server/index.js",
     "start:dev": "concurrently \"npm:build:client-watch\" \"npm:start:dev-server\"",
-    "start:dev-client": "npm run build:client-watch"
+    "start:dev-client": "npm run build:client-watch",
+    "storybook": "start-storybook -p 3456"
   },
   "nodemonConfig": {
     "ignore": [
       "src/client/*",
-      "public/*"
+      "public/*",
+      ".storybook/*",
+      "stories"
     ]
   },
   "author": "",
@@ -39,6 +42,15 @@
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
+    "@storybook/addon-a11y": "^5.3.18",
+    "@storybook/addon-actions": "^5.3.18",
+    "@storybook/addon-backgrounds": "^5.3.18",
+    "@storybook/addon-console": "^1.2.1",
+    "@storybook/addon-docs": "^5.3.18",
+    "@storybook/addon-knobs": "^5.3.18",
+    "@storybook/addon-storysource": "^5.3.18",
+    "@storybook/addon-viewport": "^5.3.18",
+    "@storybook/react": "^5.3.18",
     "babel-loader": "^8.1.0",
     "concurrently": "^5.2.0",
     "morgan": "^1.10.0",
