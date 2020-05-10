@@ -21,7 +21,7 @@ const complaintReducer = (complaint) => {
 
 const violationReducer = (violation) => {
   const { housenumber, streetname, boro, zip, nta } = violation;
-  const violationAddress = `${housenumber} ${streetname}, ${boro} ${zip} - ${nta}`;
+  const violationAddress = `${housenumber} ${streetname}, ${boro} ${zip}`;
   const addressUnit = `${violation.apartment ? `Apt ${violation.apartment} ` :'' }${violation.story ? `Flr ${violation.story}` : ''}`
   const violationType = `Class ${violation.class}${violation.novtype ? ` - ${violation.novtype}` : ''}`;
 
@@ -42,7 +42,8 @@ const violationReducer = (violation) => {
       issuedDate: violation.novissueddate ? formatDate(violation.novissueddate) : '',
       lastUpdated: violation.currentstatusdate ? formatDate(violation.currentstatusdate) : '',
       type: violationType,
-      violationStatus: `${violation.violationstatus == 'Close' ? 'Closed' : 'Open' } - ${violation.currentstatus}`
+      violationStatus: `${violation.violationstatus == 'Close' ? 'Closed' : 'Open' } - ${violation.currentstatus}`,
+      neighborhood: violation.nta
     }
   );
 };

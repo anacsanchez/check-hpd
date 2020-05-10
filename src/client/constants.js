@@ -14,15 +14,14 @@
   ]);
 
   export const complaintsTableColsMap = new Map([
-    ["problemId", "Problem ID"],
-    ["complaintId", "Complaint ID"],
+    ["problemId", "ID"],
     ["unit", "Unit"],
-    ["receivedDate", "Received Date"],
-    ["category", "Category"],
-    ["type", "Type"],
+    ["receivedDate", "Received"],
     ["issue", "Issue"],
+    ["category", "Category"],
+    ["type", "Severity"],
     ["locationType", "Location"],
     ["status", "Status"],
-    ["statusDate", "Status Date"],
+    ["statusDate", "Updated"],
     ["statusDescription", "Description"]
   ]);

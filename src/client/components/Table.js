@@ -2,13 +2,14 @@ import React from 'react';
 import { css } from '@emotion/core';
 
 const Table = ({ title, data, dataId, tableColsMap }) => {
-
   return (
     <table css={tableStyles}>
       <thead>
-        <th colSpan="100" css={titleStyles}>
-          {title}
-        </th>
+        <tr>
+          <th colSpan="100" css={titleStyles}>
+            {title} ({data.length})
+          </th>
+        </tr>
       </thead>
       <tr>
       { [...tableColsMap].map(col => {
@@ -61,19 +62,21 @@ const tableStyles = css({
 const tableCellStyles = css({
   fontSize: '14px',
   border: '1px solid gray',
-  padding: '6px'
+  padding: '8px'
 });
 
 const tableInnerCellStyles = css({
   overflow: 'auto',
   height: '62px',
+  maxWidth: '300px'
 });
 
 const titleStyles = css({
   fontSize: '16px',
   margin: '12px',
   textTransform:'capitalize',
-  backgroundColor: 'gray'
+  backgroundColor: 'gray',
+  padding: '6px 0'
 });
 
 export default Table;

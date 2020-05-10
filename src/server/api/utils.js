@@ -25,9 +25,9 @@ const fetchAddressData = async(address) => {
   const [ houseNumber, ...streetName ] = address.split(' ');
   const validStreetName = streetName.join(' ').toUpperCase();
 
-  const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields.join(',')} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' AND inspectiondate > '2014-01-01T00:00:00' &$order=inspectiondate DESC`);
+  const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields.join(',')} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' AND inspectiondate > '2015-01-01T00:00:00' &$order=inspectiondate DESC`);
 
-  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}' AND receiveddate > '2014-01-01T00:00:00' &$order=receiveddate DESC`);
+  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}' AND receiveddate > '2015-01-01T00:00:00' &$order=receiveddate DESC`);
 
   const housingData = {};
 
