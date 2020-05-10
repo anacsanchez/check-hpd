@@ -4,7 +4,8 @@ import { css } from '@emotion/core';
 const Table = ({ title, data, dataId, tableColsMap }) => {
   return (
     <Fragment>
-      <div>{title}</div>
+      <div css={titleStyles}>{title}</div>
+      { data.length ?
       <table css={tableStyles}>
         <thead>
           <tr>
@@ -19,14 +20,11 @@ const Table = ({ title, data, dataId, tableColsMap }) => {
               {
                 [...tableColsMap].map(col => {
                   const field = col[0];
-                  if(curr[field]) {
-                    const fieldData = field.match('date') ? curr[field].slice(0,10) : curr[field];
-                    return (<td css={tableCellStyles} key={`${curr[dataId]}-${field}`}>{fieldData}</td>);
+                  return (
+                    <td css={tableCellStyles} key={`${curr[dataId]}-${field}`}><div css={tableInnerCellStyles}>{curr[field] ? curr[field] : ''}</div></td>
+                  );
                   }
-                  else {
-                    return <td css={tableCellStyles} key={`${curr[dataId]}-${field}`}>''</td>;
-                  }
-                })
+                )
               }
               </tr>
             );
@@ -34,6 +32,7 @@ const Table = ({ title, data, dataId, tableColsMap }) => {
         }
         </tbody>
       </table>
+    : `No ${title} found.`}
     </Fragment>
   );
 };
@@ -44,11 +43,24 @@ const tableHeaderStyles = css({
 });
 
 const tableStyles = css({
-  border: '1px solid gray'
+  border: '1px solid gray',
+  borderCollapse: 'collapse',
+  margin: '12px'
 });
 const tableCellStyles = css({
   fontSize: '14px',
-  border: '1px solid gray'
+  border: '1px solid gray',
+  padding: '6px'
+})
+
+const tableInnerCellStyles = css({
+  overflow: 'auto',
+  height: '62px',
+})
+
+const titleStyles = css({
+  fontSize: '16px',
+  margin: '12px'
 })
 
 export default Table;

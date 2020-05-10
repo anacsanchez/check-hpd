@@ -1,29 +1,42 @@
 import React, { useState, Fragment } from 'react';
 import { Form, Table } from './index';
 import { css } from '@emotion/core';
+import { complaintsTableColsMap, violationsTableColsMap, testData } from '../constants';
 
 const CheckAddress = () => {
 
   const [ addressData, setAddressData ] = useState(JSON.parse(testData));
+  const [ isLoading, setIsLoading ] = useState(false);
 
   const fetchAddressData = (address) => {
+
+    setIsLoading(true);
+
     fetch(`/api/hpd?address=${encodeURI(address)}`)
     .then(res => res.json())
-    .then(data => setAddressData(data))
-    .catch(err => console.log(err));
+    .then(data => {
+      setIsLoading(false);
+      setAddressData(data);
+    })
+    .catch(err => {
+      setIsLoading(false);
+      console.log(err)
+    });
+
   };
 
   return (
-    <div>
-      <header>
-        Check HPD Violations and Complaints
+    <div css={checkAddressSectionStyles}>
+      <header css={headerStyles}>
+        <div>Check HPD Violations and Complaints</div>
       </header>
       <Form handleSubmit={fetchAddressData}/>
+      { isLoading ? <div css={loadingStyles}>Loading...</div> : '' }
       {
         Object.keys(addressData).length ? (
           <Fragment>
-            <Table title="Violations" data={addressData.violations} dataId='violationid' tableColsMap={violationsTableColsMap} />
-            <Table title="Complaints" data={addressData.complaints} dataId='problemid' tableColsMap={complaintsTableColsMap}/>
+            <Table title="Violations" data={addressData.violations} dataId='id' tableColsMap={violationsTableColsMap} />
+            <Table title="Complaints" data={addressData.complaints} dataId='problemId' tableColsMap={complaintsTableColsMap}/>
           </Fragment>
         ) : ''
       }
@@ -31,60 +44,20 @@ const CheckAddress = () => {
   );
 };
 
+const loadingStyles = css({
+  margin: '18px'
+});
+
+const headerStyles = css({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center'
+})
+
+const checkAddressSectionStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'column'
+})
+
 export default CheckAddress;
-
-const violationsTableColsMap = new Map([
-  ["violationid","Violation ID"],
-  ["buildingid","Building ID"],
-  ["boro","Borough"],
-  ["housenumber","House #"],
-  // ["lowhousenumber","Low House #"],
-  // ["highhousenumber","High House #"],
-  ["streetname","Street"],
-  // ["streetcode","Street Code"],
-  ["zip","Zip"],
-  ["apartment","Apt"],
-  ["story","Story"],
-  // ["block","Block"],
-  // ["lot","Lot"],
-  ["class","Class"],
-  ["inspectiondate","Inspection Date"],
-  ["approveddate","Approved Date"],
-  ["originalcertifybydate","Original Certify-By Date"],
-  ["originalcorrectbydate","Original Correct-By Date"],
-  ["certifieddate","Certified Date"],
-  ["novdescription","Description"],
-  ["novissueddate","Issue Date"],
-  ["currentstatus","Current Status"],
-  ["currentstatusdate","Current Status Date"],
-  ["novtype","Type"],
-  ["violationstatus","Violation Status"],
-  // ["latitude","Latitude"],
-  // ["longitude","Longitude"],
-  ["nta","Neighborhood"]
-]);
-
-const complaintsTableColsMap = new Map([
-  ["problemid", "Problem ID"],
-  ["complaintid", "Complaint ID"],
-  ["buildingid", "Building ID"],
-  ["borough", "Borough"],
-  ["housenumber", "House Number"],
-  ["streetname", "Street"],
-  ["zip", "Zipcode"],
-  // ["block", "Block"],
-  // ["lot", "Lot"],
-  ["apartment", "Apt"],
-  ["receiveddate", "Received Date"],
-  ["status", "Status"],
-  ["statusdate", "Status Date"],
-  ["unittype", "Unit Type"],
-  ["spacetype", "Space Type"],
-  ["type", "Type"],
-  ["majorcategory", "Category 1"],
-  ["minorcategory", "Category 2"],
-  ["code", "Code"],
-  ["statusdescription", "Status Description"]
-]);
-
-const testData = `{"violations":[{"violationid":"12421730","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"12L","story":"12","block":"16","lot":"100","class":"A","inspectiondate":"2018-06-07T00:00:00.000","approveddate":"2018-06-08T00:00:00.000","originalcertifybydate":"2018-09-28T00:00:00.000","originalcorrectbydate":"2018-09-14T00:00:00.000","certifieddate":"2018-06-27T00:00:00.000","novdescription":"SECTION 27-2013 ADM CODE  PAINT WITH LIGHT COLORED PAINT TO THE SATISFACTION OF THIS DEPARTMENT AT CEILING  IN THE BATHROOM  LOCATED AT APT 12L, 12th STORY, 2nd APARTMENT FROM WEST AT NORTH","novissueddate":"2018-06-11T00:00:00.000","currentstatus":"VIOLATION DISMISSED","currentstatusdate":"2018-09-07T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"12319342","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"19K","story":"18","block":"16","lot":"100","class":"B","inspectiondate":"2018-04-03T00:00:00.000","approveddate":"2018-04-04T00:00:00.000","originalcertifybydate":"2018-05-24T00:00:00.000","originalcorrectbydate":"2018-05-10T00:00:00.000","certifieddate":"2019-03-13T00:00:00.000","novdescription":"SECTION  27-2005 HMC:TRACE AND REPAIR THE SOURCE AND ABATE THE NUISANCE CONSISTING OF MOLD ... AT CEILING (APPROX 1 SQ FT)  IN THE BATHROOM  LOCATED AT APT 19K, 18th STORY, 1st APARTMENT FROM WEST AT NORTH","novissueddate":"2018-04-05T00:00:00.000","currentstatus":"NOV CERTIFIED LATE","currentstatusdate":"2019-03-13T00:00:00.000","novtype":"Original","violationstatus":"Open","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"12319348","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"19K","story":"18","block":"16","lot":"100","class":"B","inspectiondate":"2018-04-03T00:00:00.000","approveddate":"2018-04-04T00:00:00.000","originalcertifybydate":"2018-05-24T00:00:00.000","originalcorrectbydate":"2018-05-10T00:00:00.000","certifieddate":"2018-04-17T00:00:00.000","novdescription":"SECTION 27-2005, 2007 ADM CODE  ARRANGE AND MAKE SELF-CLOSING THE DOORS IN THE ENTRANCE  LOCATED AT APT 19K, 18th STORY, 1st APARTMENT FROM WEST AT NORTH","novissueddate":"2018-04-05T00:00:00.000","currentstatus":"VIOLATION DISMISSED","currentstatusdate":"2018-06-28T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"12319670","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"19K","story":"18","block":"16","lot":"100","class":"A","inspectiondate":"2018-04-03T00:00:00.000","approveddate":"2018-04-04T00:00:00.000","originalcertifybydate":"2018-07-23T00:00:00.000","originalcorrectbydate":"2018-07-09T00:00:00.000","certifieddate":"2018-04-17T00:00:00.000","novdescription":"SECTION 27-2013 ADM CODE  PAINT WITH LIGHT COLORED PAINT TO THE SATISFACTION OF THIS DEPARTMENT AT CEILING  IN THE BATHROOM  LOCATED AT APT 19K, 18th STORY, 1st APARTMENT FROM WEST AT NORTH","novissueddate":"2018-04-05T00:00:00.000","currentstatus":"VIOLATION DISMISSED","currentstatusdate":"2018-06-28T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"11865883","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","story":"1","block":"16","lot":"100","class":"A","inspectiondate":"2017-07-06T00:00:00.000","approveddate":"2017-07-06T00:00:00.000","originalcertifybydate":"2017-10-24T00:00:00.000","originalcorrectbydate":"2017-10-10T00:00:00.000","certifieddate":"2017-08-03T00:00:00.000","novdescription":"SECTION 27-2005 HMC: POST, IN A FORM APPROVED BY THE COMMISSIONER, AND MAINTAIN A NOTICE IN A COMMON AREA OF THE BUILDING REGARDING THE PROCEDURES THAT SHOULD BE FOLLOWED WHEN A GAS LEAK IS SUSPECTED AT PUBLIC HALL, 1st STORY","novissueddate":"2017-07-07T00:00:00.000","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2017-09-06T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"10817267","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"14F","story":"14","block":"16","lot":"100","class":"B","inspectiondate":"2015-08-11T00:00:00.000","approveddate":"2015-08-12T00:00:00.000","originalcertifybydate":"2015-10-01T00:00:00.000","originalcorrectbydate":"2015-09-17T00:00:00.000","certifieddate":"2015-11-17T00:00:00.000","novdescription":"SECTION 27-2005 ADM CODE  PROPERLY REPAIR THE BROKEN OR DEFECTIVE MECHANICAL VENTILATION FAN AT WEST WALL  IN THE 2nd BATHROOM  FROM EAST LOCATED AT APT 14F, 14th STORY, 1st APARTMENT FROM SOUTH AT WEST , SECTION  AT  WEST","novissueddate":"2015-08-13T00:00:00.000","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2016-02-24T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"10817228","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","block":"16","lot":"100","class":"A","inspectiondate":"2015-08-11T00:00:00.000","approveddate":"2015-08-12T00:00:00.000","originalcertifybydate":"2015-11-30T00:00:00.000","originalcorrectbydate":"2015-11-16T00:00:00.000","certifieddate":"2015-11-17T00:00:00.000","novdescription":"SECTION 26-1103 ADMIN. CODE: POST AND MAINTAIN A PROPER NOTICE ON WALL OF THE ENTRANCE STORY IN ENGLISH AND SPANISH ON THE AVAILABILITY OF THE AGENCY?S HOUSING INFORMATION GUIDE. A SAMPLE NOTICE CAN BE FOUND AT WWW.NYC.GOV/HPD.","novissueddate":"2015-08-13T00:00:00.000","currentstatus":"VIOLATION DISMISSED","currentstatusdate":"2016-01-28T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"10171402","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"15B","story":"15","block":"16","lot":"100","class":"A","inspectiondate":"2014-03-12T00:00:00.000","approveddate":"2014-03-13T00:00:00.000","originalcertifybydate":"2014-07-01T00:00:00.000","originalcorrectbydate":"2014-06-17T00:00:00.000","certifieddate":"2015-11-17T00:00:00.000","novdescription":"SECTION 27-2005 ADM CODE  PROPERLY REPAIR THE BROKEN OR DEFECTIVE WOOD DOOR  IN THE 4th ROOM  FROM NORTH LOCATED AT APT 15B, 15th STORY, 1st APARTMENT FROM NORTH AT EAST","novissueddate":"2014-03-14T00:00:00.000","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2017-04-10T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"10171388","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"15B","story":"15","block":"16","lot":"100","class":"A","inspectiondate":"2014-03-12T00:00:00.000","approveddate":"2014-03-13T00:00:00.000","originalcertifybydate":"2014-07-01T00:00:00.000","originalcorrectbydate":"2014-06-17T00:00:00.000","certifieddate":"2015-11-17T00:00:00.000","novdescription":"SECTION 27-2005 ADM CODE  REPAIR THE BROKEN OR DEFECTIVE PLASTERED SURFACES AND PAINT IN A UNIFORM COLOR THE CEILING  IN THE 2nd BATHROOM  FROM NORTH LOCATED AT APT 15B, 15th STORY, 1st APARTMENT FROM NORTH AT EAST","novissueddate":"2014-03-14T00:00:00.000","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2016-03-02T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"10109683","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"12B","story":"12","block":"16","lot":"100","class":"B","inspectiondate":"2014-01-25T00:00:00.000","approveddate":"2014-01-26T00:00:00.000","originalcertifybydate":"2014-03-17T00:00:00.000","originalcorrectbydate":"2014-03-03T00:00:00.000","certifieddate":"2015-11-17T00:00:00.000","novdescription":"SECTION 27-2026, 2027 HMC: PROPERLY REPAIR THE SOURCE AND ABATE THE EVIDENCE OF A WATER LEAK AT SOUTH WALL  IN THE 1st ROOM  FROM NORTH AT WEST LOCATED AT APT 12B, 12th STORY, 1st APARTMENT FROM NORTH AT EAST","novissueddate":"2014-01-27T00:00:00.000","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2017-04-10T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"},{"violationid":"4760499","buildingid":"805311","boro":"MANHATTAN","housenumber":"395","lowhousenumber":"395","highhousenumber":"397","streetname":"SOUTH END AVENUE","streetcode":"30620","zip":"10280","apartment":"32P/N","story":"32","block":"16","lot":"100","class":"A","inspectiondate":"2003-11-06T00:00:00.000","approveddate":"2003-11-10T00:00:00.000","originalcertifybydate":"2004-03-05T00:00:00.000","originalcorrectbydate":"2004-02-20T00:00:00.000","novdescription":"SECTION 27-2005 ADM CODE  PROPERLY REPAIR THE BROKEN OR DEFECTIVE   LOWER WINDOW SASH   IN THE 1st ROOM  FROM NORTH AT WEST LOCATED AT APT 32P/N, 32nd STORY, 1st APARTMENT FROM NORTH AT EAST","novissueddate":"2003-11-12T00:00:00.000","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2017-04-10T00:00:00.000","novtype":"Original","violationstatus":"Close","latitude":"40.711414","longitude":"-74.015860","nta":"Battery Park City-Lower Manhattan"}],"complaints":[{"complaintid":"6901315","buildingid":"805311","borough":"MANHATTAN","housenumber":"395","streetname":"SOUTH END AVENUE","zip":"10280","block":"16","lot":"100","apartment":"14F","receiveddate":"2014-04-28T00:00:00.000","status":"CLOSE","statusdate":"2014-07-31T00:00:00.000","problemid":"14377275","unittype":"APARTMENT","spacetype":"BATHROOM","type":"NON EMERGENCY","majorcategory":"GENERAL","minorcategory":"VENTILATION SYSTEM","code":"BROKEN OR MISSING","statusdescription":"The Department of Housing Preservation and Development inspected the following conditions. Violations were issued. Information about specific violations is available at www.nyc.gov/hpd."},{"complaintid":"6901315","buildingid":"805311","borough":"MANHATTAN","housenumber":"395","streetname":"SOUTH END AVENUE","zip":"10280","block":"16","lot":"100","apartment":"14F","receiveddate":"2014-04-28T00:00:00.000","status":"CLOSE","statusdate":"2014-07-31T00:00:00.000","problemid":"14377276","unittype":"APARTMENT","spacetype":"OTHER ROOM/AREA","type":"NON EMERGENCY","majorcategory":"GENERAL","minorcategory":"VENTILATION SYSTEM","code":"BROKEN OR MISSING","statusdescription":"The Department of Housing Preservation and Development inspected the following conditions. Violations were previously issued for these conditions. Information about specific violations is available at www.nyc.gov/hpd."},{"complaintid":"8035947","buildingid":"805311","borough":"MANHATTAN","housenumber":"395","streetname":"SOUTH END AVENUE","zip":"10280","block":"16","lot":"100","apartment":"14F","receiveddate":"2016-07-05T00:00:00.000","status":"CLOSE","statusdate":"2016-07-09T00:00:00.000","problemid":"16603320","unittype":"APARTMENT","spacetype":"BATHROOM","type":"NON EMERGENCY","majorcategory":"GENERAL","minorcategory":"VENTILATION SYSTEM","code":"BROKEN OR MISSING","statusdescription":"The Department of Housing Preservation and Development inspected the following conditions. No violations were issued. The complaint has been closed."},{"complaintid":"8469057","buildingid":"805311","borough":"MANHATTAN","housenumber":"395","streetname":"SOUTH END AVENUE","zip":"10280","block":"16","lot":"100","apartment":"35D","receiveddate":"2017-03-27T00:00:00.000","status":"CLOSE","statusdate":"2017-04-20T00:00:00.000","problemid":"17411054","unittype":"APARTMENT","spacetype":"PRIVATE HALL","type":"EMERGENCY","majorcategory":"UNSANITARY CONDITION","minorcategory":"MOLD","code":"N/A","statusdescription":"The Department of Housing Preservation and Development inspected the following conditions. No violations were issued. The complaint has been closed."},{"complaintid":"8469057","buildingid":"805311","borough":"MANHATTAN","housenumber":"395","streetname":"SOUTH END AVENUE","zip":"10280","block":"16","lot":"100","apartment":"35D","receiveddate":"2017-03-27T00:00:00.000","status":"CLOSE","statusdate":"2017-04-17T00:00:00.000","problemid":"17411055","unittype":"APARTMENT","spacetype":"PRIVATE HALL","type":"NON EMERGENCY","majorcategory":"WATER LEAK","minorcategory":"DAMP SPOT","code":"FROM WALL OR CEILING","statusdescription":"The Department of Housing Preservation and Development was not able to gain access to inspect the following conditions. The complaint has been closed. If the condition still exists, please file a new complaint."},{"complaintid":"9007250","buildingid":"805311","borough":"MANHATTAN","housenumber":"395","streetname":"SOUTH END AVENUE","zip":"10280","block":"16","lot":"100","apartment":"19K","receiveddate":"2018-03-26T00:00:00.000","status":"CLOSE","statusdate":"2018-04-04T00:00:00.000","problemid":"18440637","unittype":"APARTMENT","spacetype":"ENTIRE APARTMENT","type":"EMERGENCY","majorcategory":"UNSANITARY CONDITION","minorcategory":"MOLD","code":"N/A","statusdescription":"The Department of Housing Preservation and Development inspected the following conditions. Violations were issued. Information about specific violations is available at www.nyc.gov/hpd."},{"complaintid":"9675690","buildingid":"805311","borough":"MANHATTAN","housenumber":"395","streetname":"SOUTH END AVENUE","zip":"10280","block":"16","lot":"100","apartment":"ENTIRE","receiveddate":"2019-07-16T00:00:00.000","status":"CLOSE","statusdate":"2019-07-17T00:00:00.000","problemid":"19784816","unittype":"BUILDING-W","spacetype":"BUILDING-WIDE","type":"IMMEDIATE EMERGENCY","majorcategory":"PLUMBING","minorcategory":"WATER SUPPLY","code":"NO WATER","statusdescription":"The Department of Housing Preservation and Development inspected the following conditions. No violations were issued. The complaint has been closed."},{"complaintid":"9675757","buildingid":"805311","borough":"MANHATTAN","housenumber":"395","streetname":"SOUTH END AVENUE","zip":"10280","block":"16","lot":"100","apartment":"20J","receiveddate":"2019-07-16T00:00:00.000","status":"CLOSE","statusdate":"2019-07-17T00:00:00.000","problemid":"19785009","unittype":"BUILDING-W","spacetype":"BUILDING-WIDE","type":"IMMEDIATE EMERGENCY","majorcategory":"PLUMBING","minorcategory":"WATER SUPPLY","code":"NO WATER","statusdescription":"More than one complaint was received for this building-wide condition.This complaint status is for the initial complaint. The Department of Housing Preservation and Development contacted an occupant of the apartment and verified that the following conditions were corrected. The complaint has been closed. If the condition still exists, please file a new complaint."},{"problemid":"19952481","complaintid":"9745002","unittype":"APARTMENT","spacetype":"ENTIRE APARTMENT","type":"NON EMERGENCY","majorcategory":"UNSANITARY CONDITION","minorcategory":"PESTS","code":"OTHER","status":"CLOSE","statusdate":"2020-01-24T00:00:00.000","statusdescription":"The Department of Housing Preservation and Development was not able to gain access to inspect the following conditions. The complaint has been closed. If the condition still exists, please file a new complaint."}]}`;

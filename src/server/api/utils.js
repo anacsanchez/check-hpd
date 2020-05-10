@@ -27,7 +27,7 @@ const fetchAddressData = async(address) => {
 
   const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields.join(',')} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' &$order=inspectiondate DESC`);
 
-  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}'&$order=statusdate DESC`);
+  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}'&$order=receiveddate DESC`);
 
   const housingData = {};
 
@@ -41,7 +41,7 @@ const fetchAddressData = async(address) => {
   if(housingComplaintsData.length) {
     const complaintIds = housingComplaintsData.map(complaint => complaint.complaintid);
 
-    const apiComplaintsUrl = `${hpdComplaintsAPI}?$select=${complaintsFields.join(',')}&$where=complaintid%20in(${complaintIds.join(',')})`;
+    const apiComplaintsUrl = `${hpdComplaintsAPI}?$select=${complaintsFields.join(',')}&$where=complaintid%20in(${complaintIds.join(',')})&$order=statusdate DESC`;
 
     const complaintsData = await nycApiRequest(apiComplaintsUrl);
 
