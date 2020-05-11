@@ -5,34 +5,31 @@ import { violationsTableColsMap, complaintsTableColsMap } from '../constants';
 
 const AddressData = ({ data }) => {
   return (
-    <div css={addressDataSectionStyles}>
+    <div css={ addressDataSectionStyles }>
       {
-        data.map(currAddress => {
-          const [ addressString, addressData ] = currAddress;
+        data.map(([ addressString, addressData ]) => {
           return (
             <div key={`${addressString}-data`} css={addressTableSectionStyles}>
               <div css={addressStyles}>{addressString}</div>
-              {/* <table> */}
               {
                 addressData.violations ?
                   <Table
                     title="violations"
-                    data={addressData.violations}
+                    data={ addressData.violations }
                     dataId='violationid'
-                    tableColsMap={violationsTableColsMap}
+                    tableColsMap={ violationsTableColsMap }
                   />
-                : 'No violations found'
+                : <NoneFound type='violations' />
               }
               {
                 addressData.complaints ?
                   <Table
                     title="complaints"
-                    data={addressData.complaints}
+                    data={ addressData.complaints }
                     dataId='problemid'
-                    tableColsMap={complaintsTableColsMap}
-                  /> : 'No complaints found'
+                    tableColsMap={ complaintsTableColsMap }
+                  /> : <NoneFound type='complaints' />
               }
-              {/* </table> */}
             </div>
           );
         })
@@ -40,6 +37,12 @@ const AddressData = ({ data }) => {
     </div>
   );
 };
+
+const NoneFound = ({ type }) => (
+  <div css={noneFoundStyles}>
+    No { type } found
+  </div>
+);
 
 const addressStyles = css({
   fontSize: '16px',
@@ -56,6 +59,12 @@ const addressTableSectionStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center'
+});
+
+const noneFoundStyles = css({
+  fontSize: '16px',
+  margin: '12px 2px 16px 2px',
+  fontWeight: '600'
 })
 
 export default AddressData;

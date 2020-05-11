@@ -1,0 +1,40 @@
+import React from 'react';
+import { css } from '@emotion/core';
+
+const Pagination = ({ limit, dataLength, handlePageClick }) => {
+  let counter = 0;
+  const pages = [];
+
+  while(counter * limit < dataLength) {
+    pages.push(counter);
+    counter++;
+  }
+
+  const handleClick = (evt) => {
+    handlePageClick(evt.target.value);
+  };
+
+  return (
+    <div onClick={handleClick} css={ paginationStyles }>
+      {
+        pages.map((curr, i) => <button type="button" value={i} css={pageButtonStyles}>{i+1}</button>)
+      }
+    </div>
+  );
+};
+
+const paginationStyles = css({
+  alignSelf: 'flex-start',
+  margin: '4px 12px 12px 12px'
+});
+
+const pageButtonStyles = css({
+  fontSize: '12px',
+  margin: '0px 8px 0px 0px',
+  borderRadius: '4px',
+  backgroundColor: '#474646',
+  color: 'white',
+  border: '1px solid gray'
+})
+
+export default Pagination;
