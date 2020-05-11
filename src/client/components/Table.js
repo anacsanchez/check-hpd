@@ -1,46 +1,57 @@
-import React from 'react';
+import React, { useState, Fragment } from 'react';
 import { css } from '@emotion/core';
+import Pagination from './Pagination';
 
 const Table = ({ title, data, dataId, tableColsMap }) => {
+
+  const [ currentRow, setCurrentRow ] = useState(0);
+  const limit = 10;
+
   return (
+    <Fragment>
     <table css={tableStyles}>
       <thead>
         <tr>
-          <th colSpan="100" css={titleStyles}>
-            {title} ({data.length})
+          <th colSpan="100" css={ titleStyles }>
+            { title } ({ data.length })
           </th>
         </tr>
       </thead>
-      <tr>
-      { [...tableColsMap].map(col => {
-          const [ colDataField, colName ] = col;
-          return (
-            <th css={tableHeaderStyles} key={`${colDataField}-col`}>
-              {colName}
+      <tbody>
+        <tr>
+        {
+          [ ...tableColsMap ].map(([ colDataField, colName ]) =>
+            <th css={ tableHeaderStyles } key={ `${colDataField}-col` }>
+              { colName }
             </th>
-          );
-        })
-      }
-      </tr>
-      {
-        data.map(curr =>
-          <tr key={curr[dataId]}>
-          {
-            [...tableColsMap].map(col => {
-              const field = col[0];
-              return (
-                <td css={tableCellStyles} key={`${curr[dataId]}-${field}`}>
-                  <div css={tableInnerCellStyles}>
-                    {curr[field] ? curr[field] : ''}
+          )
+        }
+        </tr>
+        {
+          data.slice(currentRow, currentRow + limit).map(curr =>
+            <tr key={curr[dataId]}>
+            {
+              [ ...tableColsMap ].map(([ field ]) =>
+                <td css={ tableCellStyles } key={ `${curr[dataId]}-${field}` }>
+                  <div css={ tableInnerCellStyles }>
+                    { curr[field] ? curr[field] : '' }
                   </div>
                 </td>
-              );
-            })
-          }
-          </tr>
-        )
-      }
+              )
+            }
+            </tr>
+          )
+        }
+      </tbody>
     </table>
+    { data.length >= limit ?
+      <Pagination
+        limit={ limit }
+        dataLength={ data.length }
+        handlePageClick={ (pageNum) => setCurrentRow(pageNum * limit) }
+      />
+    : ''}
+    </Fragment>
   );
 };
 
