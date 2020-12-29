@@ -7,7 +7,6 @@ Enter an address to check the NYC HPD API for violation and complaint informatio
 
 
 ## Instructions
----
 
 1\. Obtain an API Token by registering for a Socrata account:
 
@@ -43,7 +42,6 @@ docker-compose down
 
 
 ## Development
----
 
 You can start the app in development mode via your CLI or Docker.
 
