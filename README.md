@@ -4,7 +4,7 @@ Enter an address to check the NYC HPD API for violation and complaint informatio
 
 * Built with React.js and Express
 * Uses HMR middleware for development
-
+* Includes Docker development files
 
 ## Instructions
 
