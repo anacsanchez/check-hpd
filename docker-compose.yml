@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  check-hpd:
+    container_name: check-hpd
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3050
+    ports:
+      - "3050:3050"

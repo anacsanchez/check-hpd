@@ -17,21 +17,18 @@ if (process.env.NODE_ENV === 'development') {
   const webpack = require('webpack');
   const webpackConfig = require(path.resolve(__dirname, '..', 'client', 'webpack.dev.js'));
   const compiler = webpack(webpackConfig);
-  app.use(require("webpack-dev-middleware")(compiler, {
-    publicPath: webpackConfig.output.publicPath
-  }));
+  const publicPath = process.env.DOCKER ? `http://${process.env.HOST}/` : webpackConfig.output.publicPath;
+  app.use(require("webpack-dev-middleware")(compiler, { publicPath }));
   app.use(require('webpack-hot-middleware')(compiler));
 }
 
-
 app.use(express.static(path.join(__dirname, '..', 'client', 'public')));
 
-
-// app.use('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '..', 'client', 'public', 'index.html'));
-// });
-
 app.use('/api',apiRouter);
+
+app.use('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'public', 'index.html'));
+});
 
 app.use((err, req, res, next) => {
   console.error(err);
