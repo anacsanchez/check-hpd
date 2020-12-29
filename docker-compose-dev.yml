@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  check-hpd:
+    container_name: check-hpd
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./.env
+    environment:
+      - NODE_ENV=development
+      - PORT=3050
+      - DOCKER=true
+    volumes:
+      - .:/usr/app
+      - check-hpd-node-modules:/usr/app/node_modules
+    command: './node_modules/.bin/nodemon --ignore client/ src/index.js'
+    ports:
+      - "3050:3050"
+
+volumes:
+  check-hpd-node-modules:
