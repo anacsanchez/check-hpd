@@ -19,7 +19,7 @@ const CheckAddress = () => {
     })
     .catch(err => {
       setIsLoading(false);
-      console.log(err)
+      console.log(err);
     });
 
   };
@@ -44,12 +44,12 @@ const headerStyles = css({
   width: '100%',
   display: 'flex',
   justifyContent: 'center'
-})
+});
 
 const checkAddressSectionStyles = css({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'column'
-})
+});
 
 export default CheckAddress;
