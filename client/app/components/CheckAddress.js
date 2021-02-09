@@ -4,52 +4,50 @@ import { css } from '@emotion/core';
 
 const CheckAddress = () => {
 
-  const [ addressData, setAddressData ] = useState([]);
-  const [ isLoading, setIsLoading ] = useState(false);
+	const [addressData, setAddressData] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
-  const fetchAddressData = (address) => {
+	const fetchAddressData = (address) => {
+		setIsLoading(true);
+		fetch(`/api/hpd?address=${encodeURI(address)}`)
+			.then(res => res.json())
+			.then(data => {
+				setIsLoading(false);
+				setAddressData(data);
+			})
+			.catch(err => {
+				console.error(err);
+				setIsLoading(false);
+			});
 
-    setIsLoading(true);
+	};
 
-    fetch(`/api/hpd?address=${encodeURI(address)}`)
-    .then(res => res.json())
-    .then(data => {
-      setIsLoading(false);
-      setAddressData(data);
-    })
-    .catch(err => {
-      setIsLoading(false);
-      console.log(err);
-    });
-
-  };
-
-  return (
-    <div css={checkAddressSectionStyles}>
-      <header css={headerStyles}>
-        <div>Check HPD Violations and Complaints</div>
-      </header>
-      <Form handleSubmit={fetchAddressData}/>
-      { isLoading ? <div css={loadingStyles}>Loading...</div> : '' }
-      { addressData.length ? <AddressData data={addressData} /> : '' }
-    </div>
-  );
+	return (
+		<div css={checkAddressSectionStyles}>
+			<header css={headerStyles}>
+				<div>Check HPD Violations and Complaints</div>
+			</header>
+			<Form handleSubmit={fetchAddressData} />
+			{ isLoading ? <div css={loadingStyles}>Loading...</div> : ''}
+			{ addressData.length ? <AddressData data={addressData} /> : ''}
+		</div>
+	);
 };
 
 const loadingStyles = css({
-  margin: '18px'
+	margin: '18px'
 });
 
 const headerStyles = css({
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center'
+	width: '100%',
+	display: 'flex',
+	justifyContent: 'center'
 });
 
 const checkAddressSectionStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  flexDirection: 'column'
+	display: 'flex',
+	alignItems: 'center',
+	flexDirection: 'column'
 });
 
 export default CheckAddress;
