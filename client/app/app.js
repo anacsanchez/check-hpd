@@ -3,9 +3,9 @@ import React from 'react';
 import { Home } from './components';
 
 const App = () => {
-  return(
-    <Home/>
-  );
+	return (
+		<Home />
+	);
 };
 
 export default hot(App);
