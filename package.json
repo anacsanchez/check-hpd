@@ -13,7 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.9.6",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
@@ -21,13 +20,17 @@
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
+    "@babel/runtime": "^7.9.6",
     "@emotion/babel-preset-css-prop": "^10.0.27",
     "@emotion/core": "^10.0.28",
+    "apollo-server-express": "^2.20.0",
     "babel-loader": "^8.1.0",
     "bent": "^7.3.0",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.11.0",
     "morgan": "^1.10.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -37,6 +40,7 @@
     "webpack-merge": "^4.2.2"
   },
   "devDependencies": {
+    "@emotion/babel-plugin": "^11.2.0",
     "@storybook/addon-a11y": "^6.1.16",
     "@storybook/addon-console": "^1.2.2",
     "@storybook/addon-essentials": "^6.1.16",
