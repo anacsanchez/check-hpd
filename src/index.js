@@ -1,12 +1,15 @@
 require('dotenv').config();
 
 const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3050;
 const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const apiRouter = require('./api');
+const graphqlServer = require('./graphql/');
+
+const PORT = process.env.PORT || 3050;
+
+const app = express();
 
 app.use(morgan('dev'));
 
@@ -22,15 +25,19 @@ if (process.env.NODE_ENV === 'development') {
   app.use(require('webpack-hot-middleware')(compiler));
 }
 
+const graphqlApi = graphqlServer();
+
+graphqlApi.applyMiddleware({ app });
+
 app.use(express.static(path.join(__dirname, '..', 'client', 'public')));
 
-app.use('/api',apiRouter);
+app.use('/api', apiRouter);
 
 app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'client', 'public', 'index.html'));
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err);
   console.error(err.stack);
   res.status(err.statusCode || 500).send(err.message || 'Internal server error.');
