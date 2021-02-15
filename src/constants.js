@@ -73,8 +73,24 @@ const HPD_COMPLAINTS_API = {
 	]
 };
 
+const HPD_BUILDINGS_API = {
+	URL: 'https://data.cityofnewyork.us/resource/kj4p-ruqc.json',
+	PARAMS: [
+		'buildingid',
+		'housenumber',
+		'streetname',
+		'zip',
+		'boro',
+		'legalstories',	// Number of legal stories in a building
+		'lifecycle', 	// The stage in the building life cycle (Building, Under Construction, Demolished, etc)
+		'recordstatus',
+		'legalclassa'	// The number of apartments in a multiple dwelling
+	]
+};
+
 module.exports = {
 	HPD_VIOLATIONS_API,
 	HPD_HOUSING_COMPLAINTS_API,
-	HPD_COMPLAINTS_API
+	HPD_COMPLAINTS_API,
+	HPD_BUILDINGS_API
 };

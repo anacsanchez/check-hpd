@@ -1,12 +1,9 @@
 const bent = require('bent');
 const {
-  hpdHousingViolationsAPI,
-  hpdHousingComplaintsAPI,
-  hpdComplaintsAPI,
-  violationsFields,
-  housingComplaintsFields,
-  complaintsFields
-} = require('./constants');
+	HPD_VIOLATIONS_API,
+	HPD_HOUSING_COMPLAINTS_API,
+	HPD_COMPLAINTS_API
+} = require('../constants');
 const { violationReducer, complaintReducer } = require('./reducers');
 
 const nycApiRequest = async (url) => {
@@ -25,9 +22,9 @@ const fetchAddressData = async(address) => {
   const [ houseNumber, ...streetName ] = address.split(' ');
   const validStreetName = streetName.join(' ').toUpperCase();
 
-  const apiViolationsUrl = hpdHousingViolationsAPI + encodeURI(`?$select=${violationsFields.join(',')} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' AND inspectiondate > '2015-01-01T00:00:00' &$order=inspectiondate DESC`);
+  const apiViolationsUrl = HPD_VIOLATIONS_API.URL + encodeURI(`?$select=${HPD_VIOLATIONS_API.PARAMS.join(',')} &$where=streetname like '%${streetName.join(' ').toUpperCase()}%' AND housenumber = '${houseNumber}' AND inspectiondate > '2015-01-01T00:00:00' &$order=inspectiondate DESC`);
 
-  const apiHousingComplaintsUrl = hpdHousingComplaintsAPI + encodeURI(`?$select=${housingComplaintsFields.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}' AND receiveddate > '2015-01-01T00:00:00' &$order=receiveddate DESC`);
+  const apiHousingComplaintsUrl = HPD_HOUSING_COMPLAINTS_API.URL + encodeURI(`?$select=${HPD_HOUSING_COMPLAINTS_API.PARAMS.join(',')} &$where=streetname like '%${validStreetName}%' AND housenumber = '${houseNumber}' AND receiveddate > '2015-01-01T00:00:00' &$order=receiveddate DESC`);
 
   const housingData = {};
 
@@ -39,7 +36,7 @@ const fetchAddressData = async(address) => {
   if(housingComplaintsData.length) {
     const complaintIds = housingComplaintsData.map(complaint => complaint.complaintid);
 
-    const apiComplaintsUrl = `${hpdComplaintsAPI}?$select=${complaintsFields.join(',')} &$where=complaintid in(${complaintIds.join(',')}) &$order=statusdate DESC`;
+    const apiComplaintsUrl = `${HPD_COMPLAINTS_API.URL}?$select=${HPD_COMPLAINTS_API.PARAMS.join(',')} &$where=complaintid in(${complaintIds.join(',')}) &$order=statusdate DESC`;
 
     const complaintsData = await nycApiRequest(apiComplaintsUrl);
 
