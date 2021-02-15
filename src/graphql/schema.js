@@ -4,7 +4,8 @@ const typeDefs = gql`
 
 	type Query {
 		address(address: AddressInput): [HPDResult]
-		getViolations(address: AddressInput): [Violation]
+		getViolationsByAddress(address: AddressInput): [Violation]
+		getBuildings(address: AddressInput): [Building]
 	}
 
 	type HPDResult {
@@ -12,13 +13,34 @@ const typeDefs = gql`
 	}
 
 	type Building {
+		buildingId: Int
 		address: Address
 		violations: [Violation]
-		complaints: [Complaint]
+#		complaints: [Complaint]
 	}
 
 	type Violation {
 		violationId: String
+		buildingId: Int!
+		address: Address
+		evaluationDates: EvaluationDates
+		issuedDate: String
+		description: String
+		type: String
+		class: String
+		currentStatus: String
+		statusUpdatedAt: String
+		officialViolationStatus: String
+	}
+	
+	type EvaluationDates {
+		inspectionDate: String
+		approvedDate: String
+		originalCertifyByDate: String
+		originalCorrectByData: String
+		certifyByDate: String
+		correctByDate: String
+		certifiedDate: String
 	}
 
 	type Complaint {
@@ -28,10 +50,11 @@ const typeDefs = gql`
 	type Address {
 		houseNumber: String!
 		streetName: String!
-		borough: String
 		zipCode: Int!
-		apartment: String
+		unit: String
 		story: String
+		borough: String
+		neighborhood: String
 	}
 
 	input AddressInput {
