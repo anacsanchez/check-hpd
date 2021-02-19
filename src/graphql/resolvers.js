@@ -1,16 +1,15 @@
 module.exports = {
 	Query: {
-		getViolationsByAddress: async(_, { address }, { dataSources }) => {
-			return dataSources.ViolationsAPI.getViolationsByAddress(address);
-		},
-		getBuildings: async(_, { address }, { dataSources }) => {
+		// getHousingViolationsByAddress: async(_, { address }, { dataSources }) => {
+		// 	return dataSources.HousingViolationsAPI.getHousingViolationsByAddress(address);
+		// },
+		checkAddress: async(_, { address }, { dataSources }) => {
 			return dataSources.BuildingsAPI.getBuildings(address);
 		}
 	},
 	Building: {
-		async violations(parent, __, {dataSources}) {
-			const {buildingId} = parent;
-			return dataSources.ViolationsAPI.getViolationsByBuildingId(buildingId);
+		async violations({ buildingId }, __, { dataSources }) {
+			return dataSources.HousingViolationsAPI.getHousingViolationsByBuildingId(buildingId);
 		}
 	}
 };

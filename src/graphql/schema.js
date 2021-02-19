@@ -3,27 +3,30 @@ const gql = require('graphql-tag');
 const typeDefs = gql`
 
 	type Query {
-		address(address: AddressInput): [HPDResult]
-		getViolationsByAddress(address: AddressInput): [Violation]
-		getBuildings(address: AddressInput): [Building]
+		checkAddress(address: AddressInput): HPDResults
+#		violations(address: AddressInput): [HousingViolation]
+		#buildings(address: AddressInput): [Building]
+#		getHousingComplaintsByAddress(address: AddressInput): [HousingComplaint]
 	}
 
-	type HPDResult {
-		results: [Building]
+	type HPDResults {
+		buildings: [Building!]
+		violations: [HousingViolation]
+		complaints: [HousingComplaint]
 	}
 
 	type Building {
 		buildingId: Int
 		address: Address
-		violations: [Violation]
-#		complaints: [Complaint]
+		violations: [HousingViolation]
+		complaints: [HousingComplaint]
 	}
 
-	type Violation {
+	type HousingViolation {
 		violationId: String
 		buildingId: Int!
 		address: Address
-		evaluationDates: EvaluationDates
+		evaluationDates: HousingViolationEvaluationDates
 		issuedDate: String
 		description: String
 		type: String
@@ -33,7 +36,7 @@ const typeDefs = gql`
 		officialViolationStatus: String
 	}
 	
-	type EvaluationDates {
+	type HousingViolationEvaluationDates {
 		inspectionDate: String
 		approvedDate: String
 		originalCertifyByDate: String
@@ -43,8 +46,26 @@ const typeDefs = gql`
 		certifiedDate: String
 	}
 
-	type Complaint {
-		complaintId: String
+	type HousingComplaintDetails {
+		complaintId: Int!
+		problemId: Int
+		unitType: String
+		spaceType: String
+		severity: String
+		category: String
+		subCategory: String
+		classification: String
+		statusDescription: String
+	}
+	
+	type HousingComplaint {
+		buildingId: Int!
+		complaintId: Int!
+		address: Address
+		receivedDate: String
+		status: String
+		statusUpdatedAt: String
+		complaintDetails: HousingComplaintDetails
 	}
 
 	type Address {

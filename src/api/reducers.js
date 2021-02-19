@@ -25,8 +25,7 @@ const violationReducer = (violation) => {
   const addressUnit = `${violation.apartment ? `Apt ${violation.apartment} ` :'' }${violation.story ? `Flr ${violation.story}` : ''}`
   const violationType = `Class ${violation.class}${violation.novtype ? ` - ${violation.novtype}` : ''}`;
 
-  return (
-    {
+  return ({
       violationid: violation.violationid,
       buildingId: violation.buildingId,
       address: violationAddress,
@@ -44,8 +43,7 @@ const violationReducer = (violation) => {
       type: violationType,
       violationStatus: `${violation.violationstatus == 'Close' ? 'Closed' : 'Open' } - ${violation.currentstatus}`,
       neighborhood: violation.nta
-    }
-  );
+  });
 };
 
 module.exports = {

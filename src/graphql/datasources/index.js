@@ -1,7 +1,7 @@
-const ViolationsAPI = require('./violations');
+const HousingViolationsAPI = require('./housingViolations');
 const BuildingsAPI = require('./buildings');
 
 module.exports = {
-	ViolationsAPI,
+	HousingViolationsAPI,
 	BuildingsAPI
 };

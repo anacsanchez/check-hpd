@@ -61,12 +61,12 @@ const HPD_COMPLAINTS_API = {
 	PARAMS: [
 		'problemid',
 		'complaintid',
-		'unittype',
-		'spacetype',
-		'type',
-		'majorcategory',
-		'minorcategory',
-		'code',
+		'unittype',		//type of unit where complaint was reported
+		'spacetype',	//type of space where complaint was reported
+		'type',			//type of complaint/severity (Emergency, Immediate Emergency, etc)
+		'majorcategory',	//major category of the problem
+		'minorcategory',	//minor category of the problem
+		'code',				//HPD code of complaint (Mice, Loose Door, etc)
 		'status',
 		'statusdate',
 		'statusdescription'
