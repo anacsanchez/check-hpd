@@ -3,25 +3,40 @@ const gql = require('graphql-tag');
 const typeDefs = gql`
 
 	type Query {
-		checkAddress(address: AddressInput): HPDResults
-#		violations(address: AddressInput): [HousingViolation]
-		#buildings(address: AddressInput): [Building]
-#		getHousingComplaintsByAddress(address: AddressInput): [HousingComplaint]
+		getBuildingsByAddressInput(address: String): [BuildingSearchResult]
+		getBuildingById(id: ID): Building
 	}
-
-	type HPDResults {
-		buildings: [Building!]
-		violations: [HousingViolation]
-		complaints: [HousingComplaint]
-	}
-
+	
 	type Building {
-		buildingId: Int
+		buildingId: Int!
 		address: Address
+		legalStories: String
 		violations: [HousingViolation]
 		complaints: [HousingComplaint]
 	}
+	
+	type BuildingSearchResult {
+		buildingId: Int!
+		address: AddressSearchResult
+	}
+	
+	type AddressSearchResult {
+		houseNumber: String!
+		streetName: String!
+		borough: String
+		zipCode: Int
+	}
 
+	type Address {
+		houseNumber: String!
+		streetName: String!
+		zipCode: Int
+		unit: String
+		story: String
+		borough: String
+		neighborhood: String
+	}
+	
 	type HousingViolation {
 		violationId: String
 		buildingId: Int!
@@ -45,18 +60,6 @@ const typeDefs = gql`
 		correctByDate: String
 		certifiedDate: String
 	}
-
-	type HousingComplaintDetails {
-		complaintId: Int!
-		problemId: Int
-		unitType: String
-		spaceType: String
-		severity: String
-		category: String
-		subCategory: String
-		classification: String
-		statusDescription: String
-	}
 	
 	type HousingComplaint {
 		buildingId: Int!
@@ -65,27 +68,23 @@ const typeDefs = gql`
 		receivedDate: String
 		status: String
 		statusUpdatedAt: String
-		complaintDetails: HousingComplaintDetails
+		problems: [ComplaintProblem]
 	}
 
-	type Address {
-		houseNumber: String!
-		streetName: String!
-		zipCode: Int!
-		unit: String
-		story: String
-		borough: String
-		neighborhood: String
+	type ComplaintProblem {
+		complaintId: Int!
+		problemId: Int!
+		unitType: String
+		spaceType: String
+		severity: String
+		category: String
+		subCategory: String
+		problemType: String
+		status: String
+		statusUpdatedAt: String
+		statusDescription: String
 	}
-
-	input AddressInput {
-		houseNumber: String!
-		streetName: String!
-		borough: String
-		zipCode: Int
-		apartment: String
-		story: String
-	}
+	
 `;
 
 module.exports = {
