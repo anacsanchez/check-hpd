@@ -4,93 +4,93 @@
 
 const HPD_VIOLATIONS_API = {
 	URL: 'https://data.cityofnewyork.us/resource/wvxf-dwi5.json',
-	PARAMS: [
-		'violationid',
-		'buildingid',
-		'boro',
-		'housenumber',
-		// 'lowhousenumber',
-		// 'highhousenumber',
-		'streetname',
-		// 'streetcode',
-		'zip',
-		'apartment',
-		'story',
+	PARAMS: {
+		violationId: 'violationid',
+		buildingId: 'buildingid',
+		borough: 'boro',
+		houseNumber: 'housenumber',
+		streetName: 'streetname',
+		zipCode: 'zip',
+		unit: 'apartment',
+		story: 'story',
+		violationClass: 'class',
+		inspectionDate: 'inspectiondate',
+		approvedDate: 'approveddate',
+		originalCertifyByDate: 'originalcertifybydate',
+		originalCorrectByDate: 'originalcorrectbydate',
+		newCertifyByDate: 'newcertifybydate',
+		newCorrectByDate: 'newcorrectbydate',
+		certifiedDate: 'certifieddate',
+		description: 'novdescription',
+		issuedDate: 'novissueddate',
+		currentStatus: 'currentstatus',
+		statusUpdatedAt: 'currentstatusdate',
+		type: 'novtype',
+		officialViolationStatus: 'violationstatus',
+		neighborhood: 'nta'
+		// lowHouseNumber: 'lowhousenumber',
+		// highHouseNumber: 'highhousenumber',
+		// streetCode: 'streetcode',
 		// 'block',
 		// 'lot',
-		'class',
-		'inspectiondate',
-		'approveddate',
-		'originalcertifybydate',
-		'originalcorrectbydate',
-		'newcertifybydate',
-		'newcorrectbydate',
-		'certifieddate',
-		'novdescription',
-		'novissueddate',
-		'currentstatus',
-		'currentstatusdate',
-		'novtype',
-		'violationstatus',
 		// 'latitude',
 		// 'longitude',
-		'nta'
-	]
+	}
 };
 
 const HPD_HOUSING_COMPLAINTS_API = {
 	URL: 'https://data.cityofnewyork.us/resource/uwyv-629c.json',
-	PARAMS: [
-		'complaintid',
-		'buildingid',
-		'borough',
-		'housenumber',
-		'streetname',
-		'zip',
+	PARAMS: {
+		complaintId: 'complaintid',
+		buildingId: 'buildingid',
+		borough: 'borough',
+		houseNumber: 'housenumber',
+		streetName: 'streetname',
+		zipCode: 'zip',
+		unit: 'apartment',
+		receivedDate: 'receiveddate',
+		status: 'status',
+		statusDate: 'statusdate'
 		// 'block',
-		// 'lot',
-		'apartment',
-		'receiveddate',
-		'status',
-		'statusdate'
-	]
+		// 'lot'
+	}
 };
 
-const HPD_COMPLAINTS_API = {
+const HPD_COMPLAINTS_PROBLEMS_API = {
 	URL: 'https://data.cityofnewyork.us/resource/a2nx-4u46.json',
-	PARAMS: [
-		'problemid',
-		'complaintid',
-		'unittype',		//type of unit where complaint was reported
-		'spacetype',	//type of space where complaint was reported
-		'type',			//type of complaint/severity (Emergency, Immediate Emergency, etc)
-		'majorcategory',	//major category of the problem
-		'minorcategory',	//minor category of the problem
-		'code',				//HPD code of complaint (Mice, Loose Door, etc)
-		'status',
-		'statusdate',
-		'statusdescription'
-	]
+	PARAMS: {
+		problemId: 'problemid',
+		complaintId: 'complaintid',
+		unitType: 'unittype',		//type of unit where complaint was reported
+		spaceType: 'spacetype',	//type of space where complaint was reported
+		severity: 'type',			//type of complaint/severity (Emergency, Immediate Emergency, etc)
+		category: 'majorcategory',	//major category of the problem
+		subCategory: 'minorcategory',	//minor category of the problem
+		problemType: 'code',				//HPD code of complaint (Mice, Loose Door, etc)
+		status: 'status',
+		statusUpdatedAt: 'statusdate',
+		statusDescription: 'statusdescription'
+	}
 };
 
 const HPD_BUILDINGS_API = {
 	URL: 'https://data.cityofnewyork.us/resource/kj4p-ruqc.json',
-	PARAMS: [
-		'buildingid',
-		'housenumber',
-		'streetname',
-		'zip',
-		'boro',
-		'legalstories',	// Number of legal stories in a building
-		'lifecycle', 	// The stage in the building life cycle (Building, Under Construction, Demolished, etc)
-		'recordstatus',
-		'legalclassa'	// The number of apartments in a multiple dwelling
-	]
+	PARAMS: {
+		buildingId: 'buildingid',
+		houseNumber: 'housenumber',
+		streetName: 'streetname',
+		zipCode: 'zip',
+		borough: 'boro',
+		legalStories: 'legalstories',	// Number of legal stories in a building
+		buildingLifecycleStage: 'lifecycle', 	// The stage in the building life cycle (Building, Under Construction, Demolished, etc)
+		recordStatus: 'recordstatus',
+		numOfApts: 'legalclassa'	// The number of apartments in a multiple dwelling
+	}
 };
 
 module.exports = {
 	HPD_VIOLATIONS_API,
 	HPD_HOUSING_COMPLAINTS_API,
-	HPD_COMPLAINTS_API,
+	HPD_COMPLAINTS_PROBLEMS_API,
 	HPD_BUILDINGS_API
 };
