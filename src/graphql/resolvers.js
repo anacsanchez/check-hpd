@@ -16,6 +16,15 @@ module.exports = {
 	Building: {
 		async violations({ buildingId }, __, { dataSources }) {
 			return dataSources.HousingViolationsAPI.getHousingViolationsByBuildingId(buildingId);
+		},
+		async complaints({ buildingId }, __, { dataSources }) {
+			const complaints = await dataSources.HousingComplaintsAPI.getHousingComplaintsByBuildingId(buildingId);
+			const complaintIds = complaints.length ? complaints.map(complaint => complaint.complaintId) : [];
+			const complaintsProblemsByComplaintId = complaintIds.length ? await dataSources.ComplaintsProblemsAPI.getComplaintsProblemsByComplaintIds(complaintIds) : {};
+			return complaints.map(complaint => {
+				complaint.problems = complaintsProblemsByComplaintId[complaint.complaintId];
+				return complaint;
+			});
 		}
 	}
 };
