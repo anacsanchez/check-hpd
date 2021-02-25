@@ -75,7 +75,7 @@ const typeDefs = gql`
 		complaintId: Int!
 		problemId: Int!
 		unitType: String
-		spaceType: String
+		location: String
 		severity: String
 		category: String
 		subCategory: String

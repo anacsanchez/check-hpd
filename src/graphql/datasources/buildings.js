@@ -1,10 +1,10 @@
 const { RESTDataSource} = require('apollo-datasource-rest');
-const { HPD_BUILDINGS_API } = require('../../constants');
+const { HPD_BUILDINGS_API: { URL: API_URL, PARAMS } } = require('../../constants');
 
 class BuildingsAPI extends RESTDataSource {
     constructor() {
         super();
-        this.baseURL = HPD_BUILDINGS_API.URL;
+        this.baseURL = API_URL;
     }
 
     willSendRequest(request) {
@@ -12,36 +12,34 @@ class BuildingsAPI extends RESTDataSource {
     }
 
     async getBuildingsByAddressInput({streetName, houseNumber, borough}) {
-        const allParams = HPD_BUILDINGS_API.PARAMS;
-        const apiQueryParams = [
-            allParams.buildingId,
-            allParams.houseNumber,
-            allParams.streetName,
-            allParams.zipCode,
-            allParams.borough
+        const apiSelectParams = [
+            PARAMS.buildingId,
+            PARAMS.houseNumber,
+            PARAMS.streetName,
+            PARAMS.zipCode,
+            PARAMS.borough
         ];
-        const query = encodeURI(`?$select=${apiQueryParams.join(',')} &$where=streetname like '%${streetName}%' AND housenumber = '${houseNumber}' ${ borough.length ? `AND boro like '%${borough}%'` : ''}`);
+        const query = encodeURI(`?$select=${apiSelectParams.join(',')} &$where=${PARAMS.streetName} like '%${streetName}%' AND ${PARAMS.houseNumber} = '${houseNumber}' ${borough.length ? `AND ${PARAMS.borough} like '%${borough}%'` : ''}`);
         const data = await this.get('', query);
         return data && data.length ? data.map(building => this.buildingReducer(building)) : [];
     }
 
     async getBuildingById(buildingId) {
-        const query = encodeURI(`?$select=${Object.values(HPD_BUILDINGS_API.PARAMS).join(',')} &$where=buildingid = ${buildingId}`);
+        const query = encodeURI(`?$select=${Object.values(PARAMS).join(',')} &$where=${PARAMS.buildingId} = ${buildingId}`);
         const data = await this.get('', query);
         return data && data.length ? this.buildingReducer(data[0]) : {};
     }
 
     buildingReducer(data) {
-        const apiParams = HPD_BUILDINGS_API.PARAMS;
         return {
-            buildingId: data[apiParams.buildingId],
+            buildingId: data[PARAMS.buildingId],
             address: {
-                houseNumber: data[apiParams.houseNumber],
-                streetName: data[apiParams.streetName],
-                zipCode: data[apiParams.zipCode],
-                borough: data[apiParams.borough],
+                houseNumber: data[PARAMS.houseNumber],
+                streetName: data[PARAMS.streetName],
+                zipCode: data[PARAMS.zipCode],
+                borough: data[PARAMS.borough]
             },
-            legalStories: data[apiParams.legalStories]
+            legalStories: data[PARAMS.legalStories]
         };
     }
 }
