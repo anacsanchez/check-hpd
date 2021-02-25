@@ -50,7 +50,7 @@ const HPD_HOUSING_COMPLAINTS_API = {
 		unit: 'apartment',
 		receivedDate: 'receiveddate',
 		status: 'status',
-		statusDate: 'statusdate'
+		statusUpdatedAt: 'statusdate'
 		// 'block',
 		// 'lot'
 	}
@@ -62,7 +62,7 @@ const HPD_COMPLAINTS_PROBLEMS_API = {
 		problemId: 'problemid',
 		complaintId: 'complaintid',
 		unitType: 'unittype',		//type of unit where complaint was reported
-		spaceType: 'spacetype',	//type of space where complaint was reported
+		location: 'spacetype',	//type of space where complaint was reported
 		severity: 'type',			//type of complaint/severity (Emergency, Immediate Emergency, etc)
 		category: 'majorcategory',	//major category of the problem
 		subCategory: 'minorcategory',	//minor category of the problem
