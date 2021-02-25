@@ -1,12 +1,14 @@
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs } = require('./schema');
-const { HousingViolationsAPI, BuildingsAPI } = require('./datasources');
+const { HousingViolationsAPI, BuildingsAPI, ComplaintsProblemsAPI, HousingComplaintsAPI } = require('./datasources');
 const resolvers = require('./resolvers');
 
 const server = () => {
 	const dataSources = () => ({
+		BuildingsAPI: new BuildingsAPI(),
 		HousingViolationsAPI: new HousingViolationsAPI(),
-		BuildingsAPI: new BuildingsAPI()
+		HousingComplaintsAPI: new HousingComplaintsAPI(),
+		ComplaintsProblemsAPI: new ComplaintsProblemsAPI(),
 	});
 
 	return new ApolloServer({

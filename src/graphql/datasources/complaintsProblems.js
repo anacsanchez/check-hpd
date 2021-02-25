@@ -1,16 +1,44 @@
 const { RESTDataSource } = require('apollo-datasource-rest');
-const { HPD_COMPLAINTS_API } = require('../../constants');
+const { HPD_COMPLAINTS_PROBLEMS_API } = require('../../constants');
 
-class ComplaintsDetailsAPI extends RESTDataSource {
+class ComplaintsProblemsAPI extends RESTDataSource {
     constructor() {
         super();
-        this.baseURL = HPD_COMPLAINTS_API.URL;
+        this.baseURL = HPD_COMPLAINTS_PROBLEMS_API.URL;
     }
 
-    async getHousingComplaintDetails(complaintIds) {
-        const query = `${HPD_COMPLAINTS_API.URL}?$select=${HPD_COMPLAINTS_API.PARAMS.join(',')} &$where=complaintid in(${complaintIds.join(',')}) &$order=statusdate DESC`;
-        const data = await this.get('', encodeURI(query));
+    async ComplaintsProblemsAPI(complaintIds) {
+        const query = encodeURI(`?$select=${Object.values(HPD_COMPLAINTS_PROBLEMS_API.PARAMS).join(',')} &$where=complaintid in(${complaintIds.join(',')}) &$order=statusdate DESC`);
+        const data = await this.get('', query);
+        return data && data.length ? data.reduce((problemsByComplaintId, currProblemData) => {
+            const complaintProblem = this.complaintProblemReducer(currProblemData)
+            if (problemsByComplaintId[complaintProblem.complaintId]) {
+                problemsByComplaintId[complaintProblem.complaintId].push(complaintProblem)
+            }
+            else {
+                problemsByComplaintId[complaintProblem.complaintId] = [complaintProblem]
+            }
+            return problemsByComplaintId;
+        }, {}) : [];
     }
+
+    complaintProblemReducer(data) {
+        const apiParams = HPD_COMPLAINTS_PROBLEMS_API.PARAMS;
+        return {
+            problemId: data[apiParams.problemId],
+            complaintId: data[apiParams.complaintId],
+            unitType: data[apiParams.unitType],
+            spaceType: data[apiParams.spaceType],
+            severity: data[apiParams.severity],
+            category: data[apiParams.category],
+            subCategory: data[apiParams.subCategory],
+            problemType: data[apiParams.problemType],
+            status: data[apiParams.status],
+            statusUpdatedAt: data[apiParams.statusUpdatedAt],
+            statusDescription: data[apiParams.statusDescription]
+        }
+    }
+
 }
 
-module.exports = ComplaintsDetailsAPI;
+module.exports = ComplaintsProblemsAPI;

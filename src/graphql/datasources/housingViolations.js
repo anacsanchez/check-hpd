@@ -16,46 +16,47 @@ class HousingViolationsAPI extends RESTDataSource {
 		return data && data.length ? data.map(violation => this.housingViolationReducer(violation)) : [];
 	}
 
-	async getHousingViolationsByAddress(address) {
-		const { houseNumber, streetName } = address;
-		const violationsQuery = encodeURI(`?$select=${HPD_VIOLATIONS_API.PARAMS.join(',')} &$where=streetname like '%${streetName.toUpperCase()}%' AND housenumber = '${houseNumber}' AND inspectiondate > '2015-01-01T00:00:00' &$order=inspectiondate DESC`);
+	async getHousingViolationsByBuildingId(buildingId) {
+		const violationsQuery = encodeURI(`?$select=${Object.values(HPD_VIOLATIONS_API.PARAMS).join(',')} &$where=buildingid = ${buildingId} AND inspectiondate > '2015-01-01T00:00:00' &$order=inspectiondate DESC`);
 		return this.sendDataApiRequest(violationsQuery);
 	}
 
-	async getHousingViolationsByBuildingId(buildingId) {
-		const violationsQuery = encodeURI(`?$select=${HPD_VIOLATIONS_API.PARAMS.join(',')} &$where=buildingid = ${buildingId} AND inspectiondate > '2015-01-01T00:00:00' &$order=inspectiondate DESC`);
+	async getHousingViolationsByAddress(address) {
+		const { houseNumber, streetName } = address;
+		const violationsQuery = encodeURI(`?$select=${Object.values(HPD_VIOLATIONS_API.PARAMS).join(',')} &$where=streetname like '%${streetName.toUpperCase()}%' AND housenumber = '${houseNumber}' AND inspectiondate > '2015-01-01T00:00:00' &$order=inspectiondate DESC`);
 		return this.sendDataApiRequest(violationsQuery);
 	}
 
 	housingViolationReducer(data) {
+		const apiParams = HPD_VIOLATIONS_API.PARAMS;
 		return {
-			violationId: data.violationid,
-			buildingId: data.buildingid,
+			violationId: data[apiParams.violationId],
+			buildingId: data[apiParams.buildingId],
 			address: {
-				houseNumber: data.housenumber,
-				streetName: data.streetname,
-				zipCode: data.zip,
-				unit: data.apartment,
-				story: data.story,
-				borough: data.boro,
-				neighborhood: data.nta
+				houseNumber: data[apiParams.houseNumber],
+				streetName: data[apiParams.streetName],
+				zipCode: data[apiParams.zipCode],
+				unit: data[apiParams.unit],
+				story: data[apiParams.story],
+				borough: data[apiParams.borough],
+				neighborhood: data[apiParams.neighborhood]
 			},
-			class: data.class,
+			violationClass: data[apiParams.violationClass],
 			evaluationDates: {
-				inspectionDate: data.inspectiondate,
-				approvedDate: data.approveddate,
-				originalCertifyByDate: data.originalcertifybydate,
-				originalCorrectByData: data.originalcorrectbydate,
-				certifyByDate: data.newcertifybydate,
-				correctByDate: data.newcorrectbydate,
-				certifiedDate: data.certifieddate
+				inspectionDate: data[apiParams.inspectionDate],
+				approvedDate: data[apiParams.approvedDate],
+				originalCertifyByDate: data[apiParams.originalCertifyByDate],
+				originalCorrectByDate: data[apiParams.originalCorrectByDate],
+				certifyByDate: data[apiParams.newCertifyByDate],
+				correctByDate: data[apiParams.newCorrectByDate],
+				certifiedDate: data[apiParams.certifiedDate]
 			},
-			issuedDate: data.novissueddate,
-			description: data.novdescription,
-			type: data.novtype,
-			currentStatus: data.currentstatus,
-			statusUpdatedAt: data.currentstatusdate,
-			officialViolationStatus: data.violationstatus
+			issuedDate: data[apiParams.issuedDate],
+			description: data[apiParams.description],
+			type: data[apiParams.type],
+			currentStatus: data[apiParams.currentStatus],
+			statusUpdatedAt: data[apiParams.statusUpdatedAt],
+			officialViolationStatus: data[apiParams.officialViolationStatus]
 		};
 	}
 }
