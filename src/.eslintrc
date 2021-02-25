@@ -10,6 +10,19 @@
 		"eslint:recommended"
 	],
 	"rules": {
-		"semi": "warn"
+		"semi": "warn",
+		"no-useless-concat": "warn",
+		"comma-dangle": "warn",
+		"comma-spacing": "warn",
+		"comma-style": "warn",
+		"key-spacing": "warn",
+		"keyword-spacing": "warn",
+		"no-multiple-empty-lines": "warn",
+		"no-trailing-spaces": "warn",
+		"no-unneeded-ternary": "warn",
+		"no-whitespace-before-property": "warn",
+		"quote-props": ["warn", "as-needed"],
+		"semi-spacing": "warn",
+		"arrow-spacing": "warn"
 	}
 }
