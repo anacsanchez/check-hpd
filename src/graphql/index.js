@@ -8,7 +8,7 @@ const server = () => {
 		BuildingsAPI: new BuildingsAPI(),
 		HousingViolationsAPI: new HousingViolationsAPI(),
 		HousingComplaintsAPI: new HousingComplaintsAPI(),
-		ComplaintsProblemsAPI: new ComplaintsProblemsAPI(),
+		ComplaintsProblemsAPI: new ComplaintsProblemsAPI()
 	});
 
 	return new ApolloServer({
