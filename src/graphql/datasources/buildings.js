@@ -19,7 +19,7 @@ class BuildingsAPI extends RESTDataSource {
             PARAMS.zipCode,
             PARAMS.borough
         ];
-        const query = encodeURI(`?$select=${apiSelectParams.join(',')} &$where=${PARAMS.streetName} like '%${streetName}%' AND ${PARAMS.houseNumber} = '${houseNumber}' ${borough.length ? `AND ${PARAMS.borough} like '%${borough}%'` : ''}`);
+        const query = encodeURI(`?$select=${apiSelectParams.join(',')} &$where=${PARAMS.streetName} like '${streetName}%' AND ${PARAMS.houseNumber} = '${houseNumber}' ${borough.length ? `AND ${PARAMS.borough} like '%${borough}%'` : ''} &$limit=10 &$order=${PARAMS.streetName} ASC`);
         const data = await this.get('', query);
         return data && data.length ? data.map(building => this.buildingReducer(building)) : [];
     }
