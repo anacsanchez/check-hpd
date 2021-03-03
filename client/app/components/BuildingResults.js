@@ -1,9 +1,34 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
+import { request, gql } from 'graphql-request';
+import { useQuery } from 'react-query';
 import { Table } from './index';
 import { violationsTableColsMap, complaintsTableColsMap } from '../constants';
 
-const AddressData = ({ data }) => {
+const AddressResults = ({ currentAddress }) => {
+	if (!currentAddress) return null;
+
+	const fetchAddressData = async () => {
+		// const data =
+	};
+	// const fetchAddressData = (address) => {
+	// 	// return refetch();
+	// 	setIsLoading(true);
+	// 	fetch(`/api/hpd?address=${encodeURI(address)}`)
+	// 		.then(res => res.json())
+	// 		.then(data => {
+	// 			setIsLoading(false);
+	// 			setAddressData(data);
+	// 		})
+	// 		.catch(err => {
+	// 			console.error(err);
+	// 			setIsLoading(false);
+	// 		});
+	//
+	//
+	// };
+
 	return (
 		<div id="test-id" css={addressDataSectionStyles}>
 			{
@@ -38,11 +63,19 @@ const AddressData = ({ data }) => {
 	);
 };
 
+AddressResults.propTypes = {
+	data: PropTypes.array
+};
+
 const NoneFound = ({ type }) => (
 	<div css={noneFoundStyles}>
-		No { type} found
+		No {type} found
 	</div>
 );
+
+NoneFound.propTypes = {
+	type: PropTypes.string
+};
 
 const addressStyles = css({
 	fontSize: '16px',
@@ -67,4 +100,4 @@ const noneFoundStyles = css({
 	fontWeight: '600'
 });
 
-export default AddressData;
+export default AddressResults;

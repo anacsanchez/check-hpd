@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
+import {useQuery} from "react-query";
+import {gql, request} from "graphql-request";
 
-const Form = ({ handleSubmit }) => {
+const AddressSearchInput = ({ handleSubmit }) => {
 
   const [ address, setAddress ] = useState('');
 
@@ -9,6 +12,26 @@ const Form = ({ handleSubmit }) => {
     evt.preventDefault();
     handleSubmit(address);
   };
+
+  const useCheckAddress = () => {
+    return useQuery(["checkAddress", address], async () => {
+      const data = await request("/graphql", gql`
+        query lookup {
+          getBuildingsByAddressInput(address: "${address}") {
+            buildingId
+            address {
+              streetName
+              houseNumber
+              borough
+            }
+          }
+        }
+      `);
+      return data;
+    });
+  };
+
+  const { status, data, error, isFetching, refetch } = useCheckAddress();
 
   return (
     <form css={formStyles} onSubmit={handleFormSubmit}>
@@ -19,6 +42,10 @@ const Form = ({ handleSubmit }) => {
       <button css={submitBtnStyles} type="submit">Submit</button>
     </form>
   );
+};
+
+AddressSearchInput.propTypes = {
+  handleSubmit: PropTypes.func
 };
 
 const formStyles = css({
@@ -55,4 +82,4 @@ const submitBtnStyles = css({
   margin: '8px'
 });
 
-export default Form;
+export default AddressSearchInput;
