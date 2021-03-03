@@ -1,42 +1,18 @@
-import React, { useState } from 'react';
-import { Form, AddressData } from './index';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { AddressSearchForm } from './index';
 import { css } from '@emotion/core';
 
-const CheckAddress = () => {
-
-	const [addressData, setAddressData] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
-
-	const fetchAddressData = (address) => {
-		setIsLoading(true);
-		fetch(`/api/hpd?address=${encodeURI(address)}`)
-			.then(res => res.json())
-			.then(data => {
-				setIsLoading(false);
-				setAddressData(data);
-			})
-			.catch(err => {
-				console.error(err);
-				setIsLoading(false);
-			});
-
-	};
-
+const CheckAddress = ({ handleSubmit }) => {
 	return (
 		<div css={checkAddressSectionStyles}>
 			<header css={headerStyles}>
 				<div>Check HPD Violations and Complaints</div>
 			</header>
-			<Form handleSubmit={fetchAddressData} />
-			{ isLoading ? <div css={loadingStyles}>Loading...</div> : ''}
-			{ addressData.length ? <AddressData data={addressData} /> : ''}
+			<AddressSearchForm handleSubmit={handleSubmit} />
 		</div>
 	);
 };
-
-const loadingStyles = css({
-	margin: '18px'
-});
 
 const headerStyles = css({
 	width: '100%',
@@ -49,5 +25,9 @@ const checkAddressSectionStyles = css({
 	alignItems: 'center',
 	flexDirection: 'column'
 });
+
+CheckAddress.propTypes = {
+	handleSubmit: PropTypes.func.isRequired
+};
 
 export default CheckAddress;

@@ -6,29 +6,32 @@ import { useQuery } from 'react-query';
 import { Table } from './index';
 import { violationsTableColsMap, complaintsTableColsMap } from '../constants';
 
-const AddressResults = ({ currentAddress }) => {
-	if (!currentAddress) return null;
-
-	const fetchAddressData = async () => {
-		// const data =
+const BuildingResults = ({ buildingId }) => {
+	const getBuildingData = async () => {
+		const { getBuildingById } = await request('/graphql', gql`
+			query {
+				getBuildingById(id: ${buildingId}) {
+					buildingId
+					address {
+						houseNumber
+						streetName
+					}
+					violations {
+						violationId
+					}
+				}
+			}
+		`);
+		return getBuildingById;
 	};
-	// const fetchAddressData = (address) => {
-	// 	// return refetch();
-	// 	setIsLoading(true);
-	// 	fetch(`/api/hpd?address=${encodeURI(address)}`)
-	// 		.then(res => res.json())
-	// 		.then(data => {
-	// 			setIsLoading(false);
-	// 			setAddressData(data);
-	// 		})
-	// 		.catch(err => {
-	// 			console.error(err);
-	// 			setIsLoading(false);
-	// 		});
-	//
-	//
-	// };
 
+	const { status, data } = useQuery(
+		['buildingData', buildingId],
+		getBuildingData
+	);
+
+	return (<div></div>);
+/*
 	return (
 		<div id="test-id" css={addressDataSectionStyles}>
 			{
@@ -60,11 +63,11 @@ const AddressResults = ({ currentAddress }) => {
 				})
 			}
 		</div>
-	);
+	); */
 };
 
-AddressResults.propTypes = {
-	data: PropTypes.array
+BuildingResults.propTypes = {
+	buildingId: PropTypes.number.isRequired
 };
 
 const NoneFound = ({ type }) => (
@@ -100,4 +103,4 @@ const noneFoundStyles = css({
 	fontWeight: '600'
 });
 
-export default AddressResults;
+export default BuildingResults;

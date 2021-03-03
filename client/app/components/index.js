@@ -1,5 +1,6 @@
 export { default as Home } from './Home.js';
-export { default as Form } from './Form';
+export { default as AddressSearchForm } from './AddressSearchForm';
 export { default as CheckAddress } from './CheckAddress';
 export { default as Table } from './Table';
-export { default as AddressData } from './AddressData';
+export { default as BuildingResults } from './BuildingResults';
+export { default as AddressSuggestions } from './AddressSuggestions';
