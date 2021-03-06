@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
-import { AddressSuggestions } from './index';
+import { request } from "graphql-request";
+import { Query } from "../graphql";
+import { useQuery } from "react-query";
+import { isValidAddress } from "../utils";
+import { AddressSuggestions } from "./index";
 
 const AddressSearchForm = ({ handleSubmit }) => {
     const [ addressInput, setAddressInput ] = useState('');
-    const [ hasSuggestions, setHasSuggestions ] = useState(false);
-    const [ isValidFormat, setIsValidFormat ] = useState(false);
+    const datalistId = "address-suggestions-list";
 
     const handleFormSubmit = (evt) => {
         evt.preventDefault();
         handleSubmit(evt.target.address.list.firstChild.id);
     };
 
-    const handleInputChange = ({ target: { value } }) => {
-        setAddressInput(value);
-        if (!value.length) {
-            setIsValidFormat(false);
+    const { data } = useQuery(["addressSuggestionsList", addressInput], async () => {
+            const { getBuildingsByAddressInput } = await request("/graphql", Query.getBuildingsByAddressInput(addressInput));
+            return getBuildingsByAddressInput;
+        }, {
+            enabled: isValidAddress(addressInput)
         }
-        setIsValidFormat(!!value.match(/[\w\d-]+\s[\w\d].*/));
-    };
-
-    const handleSuggestionsChange = (results) => {
-        setHasSuggestions(!!results.length);
-    };
+    );
 
     return (
         <form css={formStyles} onSubmit={handleFormSubmit}>
@@ -31,22 +30,22 @@ const AddressSearchForm = ({ handleSubmit }) => {
                 <label css={labelStyles}>Enter Address:</label>
                 <input css={textInputStyles}
                        type="search"
-                       list="address-suggestions-list"
+                       list={datalistId}
                        name="address"
-                       onChange={handleInputChange}
+                       onChange={({ target: { value } }) => setAddressInput(value)}
                 />
+                { data?.length ?
+                    <AddressSuggestions datalistId={datalistId}
+                                        data={data}
+                    /> : null
+                }
             </div>
             <button css={submitBtnStyles}
                     type="submit"
-                    disabled={!hasSuggestions}>
+                    disabled={!data?.length}
+            >
               Submit
             </button>
-            { isValidFormat ?
-                <AddressSuggestions addressInput={addressInput}
-                                    datalistId="address-suggestions-list"
-                                    onChange={handleSuggestionsChange}
-                /> : null
-            }
         </form>
     );
 };

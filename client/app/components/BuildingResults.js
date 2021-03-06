@@ -1,33 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
-import { request, gql } from 'graphql-request';
+import { request } from 'graphql-request';
 import { useQuery } from 'react-query';
+import { Query } from '../graphql';
 import { Table } from './index';
 import { violationsTableColsMap, complaintsTableColsMap } from '../constants';
 
 const BuildingResults = ({ buildingId }) => {
-	const getBuildingData = async () => {
-		const { getBuildingById } = await request('/graphql', gql`
-			query {
-				getBuildingById(id: ${buildingId}) {
-					buildingId
-					address {
-						houseNumber
-						streetName
-					}
-					violations {
-						violationId
-					}
-				}
-			}
-		`);
-		return getBuildingById;
-	};
-
 	const { status, data } = useQuery(
 		['buildingData', buildingId],
-		getBuildingData
+		async () => {
+			const { getBuildingById } = await request('/graphql', Query.getBuildingById(buildingId));
+			return getBuildingById;
+		}
 	);
 
 	return (<div></div>);
@@ -67,7 +53,7 @@ const BuildingResults = ({ buildingId }) => {
 };
 
 BuildingResults.propTypes = {
-	buildingId: PropTypes.number.isRequired
+	buildingId: PropTypes.string.isRequired
 };
 
 const NoneFound = ({ type }) => (
