@@ -8,7 +8,7 @@ const typeDefs = gql`
 	}
 	
 	type Building {
-		buildingId: Int!
+		buildingId: ID!
 		address: Address
 		legalStories: String
 		violations: [HousingViolation]
@@ -16,7 +16,7 @@ const typeDefs = gql`
 	}
 	
 	type BuildingSearchResult {
-		buildingId: Int!
+		buildingId: ID!
 		address: AddressSearchResult
 	}
 	
@@ -38,8 +38,8 @@ const typeDefs = gql`
 	}
 	
 	type HousingViolation {
-		violationId: String
-		buildingId: Int!
+		violationId: ID!
+		buildingId: ID!
 		address: Address
 		evaluationDates: HousingViolationEvaluationDates
 		issuedDate: String
@@ -62,8 +62,8 @@ const typeDefs = gql`
 	}
 	
 	type HousingComplaint {
-		buildingId: Int!
-		complaintId: Int!
+		buildingId: ID!
+		complaintId: ID!
 		address: Address
 		receivedDate: String
 		status: String
@@ -72,8 +72,8 @@ const typeDefs = gql`
 	}
 
 	type ComplaintProblem {
-		complaintId: Int!
-		problemId: Int!
+		complaintId: ID!
+		problemId: ID!
 		unitType: String
 		location: String
 		severity: String
