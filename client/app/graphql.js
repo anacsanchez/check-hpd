@@ -2,24 +2,64 @@ import { gql } from 'graphql-request';
 
 export const Query = {
     getBuildingById: (buildingId) => gql`
-        query {
+        query GetBuildingById {
             getBuildingById(id: ${buildingId}) {
                 buildingId
+                legalStories
+                numOfApts
+                recordStatus
                 address {
                     houseNumber
                     streetName
+                    zipCode
+                    borough
                 }
                 violations {
-                    violationId
+                    violationId,
+                    address {
+                        story
+                        unit
+                        neighborhood
+                    },
+                    issuedDate
+                    description
+                    type
+                    violationClass
+                    currentStatus
+                    statusUpdatedAt
+                    officialViolationStatus
+                    evaluationDates {
+                        inspectionDate
+                        approvedDate
+                        correctByDate
+                    }
                 }
                 complaints {
                     complaintId
+                    receivedDate
+                    address {
+                        unit
+                    }
+                    status
+                    statusUpdatedAt
+                    problems {
+                        problemId
+                        location
+                        unitType
+                        severity
+                        category
+                        subCategory
+                        problemType
+                        status
+                        statusUpdatedAt
+                        statusDescription
+                    }
                 }
             }
         }
     `,
     getBuildingsByAddressInput: (addressInput) => gql`
-        query {
+        query GetBuildingsByAddressInput {
             getBuildingsByAddressInput(address: "${addressInput}") {
                 buildingId
                 address {
