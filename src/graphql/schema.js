@@ -11,6 +11,8 @@ const typeDefs = gql`
 		buildingId: ID!
 		address: Address
 		legalStories: String
+		numOfApts: String
+		recordStatus: String
 		violations: [HousingViolation]
 		complaints: [HousingComplaint]
 	}
@@ -45,7 +47,7 @@ const typeDefs = gql`
 		issuedDate: String
 		description: String
 		type: String
-		class: String
+		violationClass: String
 		currentStatus: String
 		statusUpdatedAt: String
 		officialViolationStatus: String

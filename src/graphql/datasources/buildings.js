@@ -39,7 +39,9 @@ class BuildingsAPI extends RESTDataSource {
                 zipCode: data[PARAMS.zipCode],
                 borough: data[PARAMS.borough]
             },
-            legalStories: data[PARAMS.legalStories]
+            legalStories: data[PARAMS.legalStories],
+            numOfApts: data[PARAMS.numOfApts],
+            recordStatus: data[PARAMS.recordStatus]
         };
     }
 }

@@ -17,11 +17,13 @@ class HousingComplaintsAPI extends RESTDataSource {
         return {
             buildingId: data[PARAMS.buildingId],
             complaintId: data[PARAMS.complaintId],
-            borough: data[PARAMS.borough],
-            houseNumber: data[PARAMS.houseNumber],
-            streetName: data[PARAMS.streetName],
-            zipCode: data[PARAMS.zipCode],
-            unit: data[PARAMS.unit],
+            address: {
+                houseNumber: data[PARAMS.houseNumber],
+                streetName: data[PARAMS.streetName],
+                unit: data[PARAMS.unit],
+                borough: data[PARAMS.borough],
+                zipCode: data[PARAMS.zipCode]
+            },
             receivedDate: data[PARAMS.receivedDate],
             status: data[PARAMS.status],
             statusUpdatedAt: data[PARAMS.statusUpdatedAt]
