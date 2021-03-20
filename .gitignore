@@ -3,4 +3,5 @@
 node_modules
 .env
 client/public/bundle.js
+client/public/mockServiceWorker.js
 src/graphql/.graphqlconfig
