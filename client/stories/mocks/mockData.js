@@ -1,3 +1,26 @@
+export const getBuildingsByAddressInputData = {
+    "395 S": [
+        {buildingid: "365845", housenumber: "395", streetname: "SACKETT STREET", zip: "11231", boro: "BROOKLYN"},
+        {buildingid: "366377", housenumber: "395", streetname: "SARATOGA AVENUE", zip: "11233", boro: "BROOKLYN"},
+        {buildingid: "367932", housenumber: "395", streetname: "SCHENECTADY AVENUE", zip: "11213", boro: "BROOKLYN"},
+        {buildingid: "371070", housenumber: "395", streetname: "SMITH STREET", zip: "11231", boro: "BROOKLYN"},
+        {buildingid: "950488", housenumber: "395", streetname: "SOUTH 2 STREET", zip: "11211", boro: "BROOKLYN"},
+        {buildingid: "372191", housenumber: "395", streetname: "SOUTH 3 STREET", zip: "11211", boro: "BROOKLYN"},
+        {buildingid: "805311", housenumber: "395", streetname: "SOUTH END AVENUE", zip: "10280", boro: "MANHATTAN"},
+        {buildingid: "375633", housenumber: "395", streetname: "STANHOPE STREET", zip: "11237", boro: "BROOKLYN"},
+        {buildingid: "373989", housenumber: "395", streetname: "ST JOHNS PLACE", zip: "11238", boro: "BROOKLYN"},
+        {buildingid: "377711", housenumber: "395", streetname: "STOCKHOLM STREET", zip: "11237", boro: "BROOKLYN"}
+    ],
+    "395 So": [
+        {buildingid: "950488", housenumber: "395", streetname: "SOUTH 2 STREET", zip: "11211", boro: "BROOKLYN"},
+        {buildingid: "372191", housenumber: "395", streetname: "SOUTH 3 STREET", zip: "11211", boro: "BROOKLYN"},
+        {buildingid: "805311", housenumber: "395", streetname: "SOUTH END AVENUE", zip: "10280", boro: "MANHATTAN"}
+    ],
+    "395 South E": [
+        {buildingid: "805311", housenumber: "395", streetname: "SOUTH END AVENUE", zip: "10280", boro: "MANHATTAN"}
+    ]
+};
+
 export const getBuildingByIdData = {
     buildingId: "805311",
     legalStories: "34",

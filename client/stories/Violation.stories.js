@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    ItemList as ItemListWrapper,
     Violation as SingleViolation
 } from "../app/components";
 import { getBuildingByIdData } from './mocks/mockData';
@@ -10,17 +11,30 @@ export default {
 
 const ViolationTemplate = (args) => <SingleViolation {...args} />;
 
-export const ClassA = ViolationTemplate.bind({});
-ClassA.args = {
+export const ClassAViolation = ViolationTemplate.bind({});
+ClassAViolation.args = {
     violation: getBuildingByIdData.violations[0]
 };
 
-export const ClassB = ViolationTemplate.bind({});
-ClassB.args = {
+export const ClassBViolation = ViolationTemplate.bind({});
+ClassBViolation.args = {
     violation: getBuildingByIdData.violations[2]
 };
 
-export const ClassC = ViolationTemplate.bind({});
-ClassC.args = {
+export const ClassCViolation = ViolationTemplate.bind({});
+ClassCViolation.args = {
     violation: getBuildingByIdData.violations[9]
 };
+
+export const ViolationsList = (args) => (
+    <ItemListWrapper>
+        {
+            getBuildingByIdData.violations.map(violation => (
+                <SingleViolation key={violation.violationId}
+                                 violation={violation}
+                                 {...args}
+                />)
+            )
+        }
+    </ItemListWrapper>
+);

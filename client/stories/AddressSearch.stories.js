@@ -1,13 +1,12 @@
 import React from 'react';
-import { Home as HomePage } from '../app/components';
+import {
+    AddressSearchForm as SearchAddressForm
+} from '../app/components';
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 export default {
-    title: 'Home',
-    backgrounds: [
-        {name: 'black', value: '#00aced'}
-    ],
+    title: 'Address Search',
     decorators: [
         (Story) => {
             const queryClient = new QueryClient({
@@ -29,4 +28,9 @@ export default {
     ]
 };
 
-export const Home = () => <HomePage />;
+export const AddressSearchForm = (args) => <SearchAddressForm {...args} />;
+
+AddressSearchForm.args = {
+    handleSubmit: () => null
+};
+
