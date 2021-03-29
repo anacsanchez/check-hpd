@@ -4,8 +4,7 @@ import { css } from '@emotion/core';
 import { request } from 'graphql-request';
 import { useQuery } from 'react-query';
 import { Query } from '../graphql';
-import { Table } from './index';
-import { violationsTableColsMap, complaintsTableColsMap } from '../constants';
+import { BuildingInfo, ItemList, Violation } from './index';
 
 const BuildingResults = ({ buildingId }) => {
 	const { status, data } = useQuery(
@@ -15,41 +14,20 @@ const BuildingResults = ({ buildingId }) => {
 			return getBuildingById;
 		}
 	);
-
-	return (<div></div>);
-/*
+	if (status === 'loading') return <div>Loading...</div>;
+	if (!data) return null;
 	return (
-		<div id="test-id" css={addressDataSectionStyles}>
+		<div>
+			<BuildingInfo building={data} />
 			{
-				data.map(([addressString, addressData]) => {
-					return (
-						<div key={`${addressString}-data`} css={addressTableSectionStyles}>
-							<div css={addressStyles}>{addressString}</div>
-							{
-								addressData.violations ?
-									<Table
-										title="violations"
-										data={addressData.violations}
-										dataId='violationid'
-										tableColsMap={violationsTableColsMap}
-									/>
-									: <NoneFound type='violations' />
-							}
-							{
-								addressData.complaints ?
-									<Table
-										title="complaints"
-										data={addressData.complaints}
-										dataId='problemid'
-										tableColsMap={complaintsTableColsMap}
-									/> : <NoneFound type='complaints' />
-							}
-						</div>
-					);
-				})
+				data.violations?.length ? (
+					<ItemList>
+					{ data.violations.map(violation => <Violation key={violation.violationId} violation={violation} />) }
+					</ItemList>
+				) : ''
 			}
 		</div>
-	); */
+	);
 };
 
 BuildingResults.propTypes = {
@@ -65,23 +43,6 @@ const NoneFound = ({ type }) => (
 NoneFound.propTypes = {
 	type: PropTypes.string
 };
-
-const addressStyles = css({
-	fontSize: '16px',
-	margin: '18px 6px 4px 6px'
-});
-
-const addressDataSectionStyles = css({
-	display: 'flex',
-	flexDirection: 'column',
-	alignItems: 'center'
-});
-
-const addressTableSectionStyles = css({
-	display: 'flex',
-	flexDirection: 'column',
-	alignItems: 'center'
-});
 
 const noneFoundStyles = css({
 	fontSize: '16px',

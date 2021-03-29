@@ -4,3 +4,7 @@ export { default as CheckAddress } from './CheckAddress';
 export { default as Table } from './Table';
 export { default as BuildingResults } from './BuildingResults';
 export { default as AddressSuggestions } from './AddressSuggestions';
+export { default as BuildingInfo } from './BuildingInfo';
+export { default as Violation } from './Violation';
+export { default as Complaint } from './Complaint';
+export { default as ItemList } from './ItemList';

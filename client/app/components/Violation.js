@@ -42,10 +42,10 @@ const Violation = ({ violation: { violationId, address, violationClass, issuedDa
             <div css={dataFieldStyles}>
                 <div css={minorLabelStyles}>Status</div>
                 <div css={dataValueStyles}>
-                    <span>{currentStatus.toLowerCase()}</span>
                     <span css={openStatusStyles}>
-                        {officialViolationStatus !== 'Close' ? ` - ${officialViolationStatus}` : ''  }
+                        {officialViolationStatus !== 'Close' ? `${officialViolationStatus} - ` : ''  }
                     </span>
+                    <span>{currentStatus.toLowerCase()}</span>
                 </div>
             </div>
         </div>
@@ -77,9 +77,9 @@ Violation.propTypes = {
 };
 
 const minorLabelStyles = {
-    color: 'rgb(169 169 169)',
+    color: 'rgb(183 201 246)',
     fontSize: '12px',
-    paddingBottom: '4px'
+    paddingBottom: '6px'
 };
 
 const openStatusStyles = {
